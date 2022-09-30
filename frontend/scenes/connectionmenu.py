@@ -6,7 +6,7 @@ from backend.theatre import theatre
 
 
 
-class ConnectingMenu(Scene):
+class ConnectionMenu(Scene):
     def __init__(self, act, surface: pygame.Surface) -> None:
         super().__init__(act, surface)
 
@@ -19,6 +19,7 @@ class ConnectingMenu(Scene):
         from engine import Element
         self.text = Element(self)
         self.btn_cancel = MenuButton(self, text="Connect", from_center_top=(0, 400), on_click=self.btn_cancel_click)
+
 
     # ----------BUTTONS----------
     def btn_cancel_click(self):
