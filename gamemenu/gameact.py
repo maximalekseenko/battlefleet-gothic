@@ -4,12 +4,9 @@ import pygame
 from engine import Act
 from theatre import theatre
 
-# scenes
-from .load_scene import Load_Scene
-from .battle_scene import Battle_Scene
 
 
-class Game_Act(Act):
+class GameAct(Act):
     def __init__(self) -> None:
         super().__init__()
 
@@ -17,6 +14,7 @@ class Game_Act(Act):
         self.surface = pygame.display.get_surface()
 
         # scenes
+        from gamemenu.scenes import Load_Scene, Battle_Scene
         self.load_scene:Load_Scene = Load_Scene(self, self.surface)
         self.battle_scene:Battle_Scene = Battle_Scene(self, self.surface)
 
