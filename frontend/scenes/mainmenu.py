@@ -38,6 +38,10 @@ class MainMenu(Scene):
 
 
     # ----------ON_STUFF----------
+    def On_Update(self):
+        for element in self.elements: element.Update()
+
+
     def On_Open(self) -> None:
         for element in self.elements: element.Update()
 

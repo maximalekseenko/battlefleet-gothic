@@ -18,7 +18,6 @@ class SettingsMenu(Scene):
         from frontend.elements import MenuButton, ColorSetting, TextSetting
 
         self.elements:list[Element] = [
-
             ColorSetting(self, from_center_top=(-125, 100), setting_name="Background", setting_key="background_color"),
             ColorSetting(self, from_center_top=(-125, 140), setting_name="Ui", setting_key="ui_color"),
             ColorSetting(self, from_center_top=(-125, 180), setting_name="Neutral", setting_key="neutral_color"),
