@@ -30,30 +30,6 @@ class SettingsMenu(Scene):
             TextSetting(self, from_center_top=(125, 220), setting_name="Port", setting_key="server_port"),
             MenuButton(self, text="Save and back", from_center_top=(0, 400), on_click=self.btn_back_click)
         ]
- 
-
-    # ----------TEXTBOXES----------   
-    def tbx_color(scene, tbx, setting_name, num):
-
-        # get value
-        value = int(tbx.text) if tbx.text.isnumeric() else 0
-
-        # validate value
-        if value < 0: value = 0
-        if value > 255: value = 255
-
-        # set value
-        getattr(theatre, setting_name)[num] = value
-
-        # update self
-        tbx.text = str(value)
-        scene.Update()
-
-
-    def tbx_name(scene, tbx):
-        if len(tbx.text) > theatre.PLAYER_NAME_LEN_MAX: tbx.text = tbx.text[:theatre.PLAYER_NAME_LEN_MAX]
-        theatre.player_name = tbx.text
-        tbx.Update()
 
 
     # ----------BUTTONS----------
