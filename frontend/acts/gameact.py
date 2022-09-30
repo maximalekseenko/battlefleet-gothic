@@ -2,7 +2,7 @@ import pygame
 
 # engine
 from engine import Act
-from theatre import theatre
+from backend.theatre import theatre
 
 
 
@@ -14,11 +14,11 @@ class GameAct(Act):
         self.surface = pygame.display.get_surface()
 
         # scenes
-        from gamemenu.scenes import Load_Scene, Battle_Scene
-        self.load_scene:Load_Scene = Load_Scene(self, self.surface)
-        self.battle_scene:Battle_Scene = Battle_Scene(self, self.surface)
+        # from gamemenu.scenes import Load_Scene, Battle_Scene
+        # self.load_scene:Load_Scene = Load_Scene(self, self.surface)
+        # self.battle_scene:Battle_Scene = Battle_Scene(self, self.surface)
 
-        self.load_scene.Open()
+        # self.load_scene.Open()
 
     
     def On_Handle(self, event: pygame.event.Event) -> None:

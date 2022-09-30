@@ -2,7 +2,7 @@ import pygame
 
 # engine
 from engine import Scene
-from theatre import theatre
+from backend.theatre import theatre
 
 
 
@@ -11,11 +11,11 @@ class MainMenu(Scene):
         super().__init__(act, surface)
 
         # for snippets
-        from mainmenu import MainAct
+        from frontend.acts import MainAct
         self.act:MainAct
 
         # elements
-        from mainmenu.elements import MenuButton
+        from frontend.elements import MenuButton
         from engine import Element
         self.elements:list[Element] = [
             MenuButton(self, text="Play", from_center_top=(0, 100), on_click=self.btn_play_click),

@@ -1,1 +1,0 @@
-from .mainact import MainAct

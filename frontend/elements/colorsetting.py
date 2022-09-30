@@ -4,7 +4,7 @@ import pygame
 
 # engine
 from engine import Element
-from theatre import theatre
+from backend.theatre import theatre
 
 
 

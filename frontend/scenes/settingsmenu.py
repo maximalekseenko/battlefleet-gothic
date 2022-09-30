@@ -2,7 +2,7 @@ import pygame
 
 # engine
 from engine import Scene, Element
-from theatre import theatre
+from backend.theatre import theatre
 
 
 
@@ -11,11 +11,11 @@ class SettingsMenu(Scene):
         super().__init__(act, surface)
 
         # for snippets
-        from mainmenu import MainAct
+        from frontend.acts import MainAct
         self.act:MainAct
 
         # elements
-        from mainmenu.elements import MenuButton, ColorSetting, TextSetting
+        from frontend.elements import MenuButton, ColorSetting, TextSetting
 
         self.elements:list[Element] = [
 

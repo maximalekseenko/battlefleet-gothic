@@ -1,17 +1,16 @@
 import pygame
 
 # theatre
-from theatre import theatre
+from backend.theatre import theatre
 
 # acts
-from gamemenu.gameact import Game_Act
-from mainmenu import MainAct
+from frontend.acts import MainAct, GameAct
 
 
 
 if __name__=="__main__":
     theatre.mainact = MainAct()
-    theatre.game_act = Game_Act()
+    theatre.game_act = GameAct()
 
     theatre.current_act = theatre.mainact
     theatre.Begin()

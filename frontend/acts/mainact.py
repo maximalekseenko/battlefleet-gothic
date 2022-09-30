@@ -2,7 +2,7 @@ import pygame
 
 # engine
 from engine import Act
-from theatre import theatre
+from backend.theatre import theatre
 
 
 
@@ -14,7 +14,7 @@ class MainAct(Act):
         self.surface = pygame.display.get_surface()
 
         # menus (scenes)
-        from mainmenu.scenes import MainMenu, SettingsMenu
+        from frontend.scenes import MainMenu, SettingsMenu
         self.mainmenu:MainMenu = MainMenu(self, self.surface)
         self.settingsmenu:SettingsMenu = SettingsMenu(self, self.surface)
 
