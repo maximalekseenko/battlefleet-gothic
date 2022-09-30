@@ -10,6 +10,8 @@ class Theatre(Theatre):
         super().__init__()
 
         # consts
+        self.FONT60 = pygame.font.Font(None, 60)
+        self.FONT24 = pygame.font.Font(None, 24)
         self.BUTTON_SIZE = (300, 25)
         self.BUTTON_FONT = pygame.font.Font(None, 24)
         self.PLAYER_NAME_LEN_MAX = 20
