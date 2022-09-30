@@ -4,7 +4,7 @@ import pygame
 from theatre import theatre
 
 # acts
-from game.game_act import Game_Act
+from gamemenu.gameact import Game_Act
 from mainmenu import MainAct
 
 
