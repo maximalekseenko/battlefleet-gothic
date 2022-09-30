@@ -25,7 +25,7 @@ class MainMenu(Scene):
 
     # ----------BUTTONS----------
     def btn_play_click(self):
-        theatre.current_act = theatre.game_act
+        theatre.current_act = theatre.gameact
 
 
     def btn_settings_click(self):
