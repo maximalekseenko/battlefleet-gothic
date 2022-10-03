@@ -1,4 +1,7 @@
-import backend.game as game
+from .action import Action
+from .armament import Armament
+
+
 
 class Vessel:
 
@@ -7,10 +10,10 @@ class Vessel:
     TYPEBATTLESHIP = 2
 
     # actions
-    MOVEMENT_ACTIONS:list[game.Action]
-    SPECAL_ACTIONS:list[game.Action]
-    VESSEL_ACTIONS:list[game.Action]
-    ARMAMENT_ACTIONS:list[game.Action]
+    MOVEMENT_ACTIONS:list[Action]
+    SPECAL_ACTIONS:list[Action]
+    VESSEL_ACTIONS:list[Action]
+    ARMAMENT_ACTIONS:list[Action]
 
 
     # datasheet
@@ -18,7 +21,7 @@ class Vessel:
     TYPE:int
     SPEED:int
     TURNS:int
-    ARMAMENTS:list[game.Armament]
+    ARMAMENTS:list[Armament]
     LEADERSHIP:int
 
 
@@ -31,10 +34,10 @@ class Vessel:
         self.rotation:int = rotation
 
         # turn stuff
-        self.movement_actions:list[game.Action]
-        self.specal_actions:list[game.Action]
-        self.vessel_actions:list[game.Action]
-        self.armament_actions:list[game.Action]
+        self.movement_actions:list[Action]
+        self.specal_actions:list[Action]
+        self.vessel_actions:list[Action]
+        self.armament_actions:list[Action]
         self.hits_current:int
         self.speed_current:int
         self.turns_current:int

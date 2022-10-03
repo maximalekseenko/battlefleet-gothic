@@ -1,12 +1,10 @@
-import backend.game as game
-
-
 class Action:
     NAME:str
 
 
     def __init__(self, vessel) -> None:
-        self.vessel:game.Vessel = vessel
+        from .vessel import Vessel
+        self.vessel:Vessel = vessel
 
 
     def Check(self, **kargs) -> bool: pass
