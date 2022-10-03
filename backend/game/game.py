@@ -1,4 +1,4 @@
-from .vessel import Vessel
+import backend.game as game
 
 
 class Game:
@@ -7,13 +7,13 @@ class Game:
         self.size = (90, 60)
 
         self.vessel_id_last:int = -1
-        self.forces:list[Vessel] = list()
+        self.forces:list[game.Vessel] = list()
 
         # flags
         self.is_started = False
 
 
-    def Add_Vessel(self, vessel_type, owner_index:int, position:tuple[int, int], rotation:int) -> Vessel:
+    def Add_Vessel(self, vessel_type, owner_index:int, position:tuple[int, int], rotation:int) -> game.Vessel:
 
         # create new vessel
         new_vessel = vessel_type(self.players[owner_index], position, rotation, self.vessel_id_last + 1)
@@ -55,9 +55,8 @@ class Game:
         self.is_started = True
 
 
-    def Handle_Actions(self, socket, actions:list):
-        for action in actions:
-            pass
+    def Handle_Action(self, socket, action:list):
+        pass
 
 
     def player_thread(self, socket):

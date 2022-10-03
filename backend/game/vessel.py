@@ -1,4 +1,4 @@
-from .armament import Armament, FIREARC
+import backend.game as game
 
 class Vessel:
 
@@ -6,51 +6,74 @@ class Vessel:
     TYPECRUISER = 1
     TYPEBATTLESHIP = 2
 
+    # actions
+    MOVEMENT_ACTIONS:list[game.Action]
+    SPECAL_ACTIONS:list[game.Action]
+    VESSEL_ACTIONS:list[game.Action]
+    ARMAMENT_ACTIONS:list[game.Action]
+
+
+    # datasheet
+    HITS:int
+    TYPE:int
+    SPEED:int
+    TURNS:int
+    ARMAMENTS:list[game.Armament]
+    LEADERSHIP:int
+
+
     def __init__(self, owner, position:tuple[int,int], rotation:int, id:int) -> None:
 
         # game variables
         self.owner = owner
         self.id:int = id
-
-        # datasheet
-        self.hits:int = 8
-        self.type:int = Vessel.TYPECRUISER
-        self.speed:int = 20
-        self.turns:int = 45
-        self.armaments:list[Armament] = [Armament(FIREARC.LEFT), Armament(FIREARC.RIGHT)]
-
-        # space
         self.position:tuple[int,int] = position
         self.rotation:int = rotation
 
-
-        self.hits_current:int = 8
         # turn stuff
-        self.turn_movement:int
-        self.turn_rotation:int
+        self.movement_actions:list[game.Action]
+        self.specal_actions:list[game.Action]
+        self.vessel_actions:list[game.Action]
+        self.armament_actions:list[game.Action]
+        self.hits_current:int
+        self.speed_current:int
+        self.turns_current:int
 
+        self.Game_Reset()
         self.Turn_Reset()
 
 
-    def Turn_Reset(self):
-        self.turn_movement = self.speed
-        self.turn_rotation = self.turns
+    def Game_Reset(self):
 
-        for armament in self.armaments: armament.Turn_Reset()
+        # hits
+        self.hits_current = self.HITS
+
+        # actions
+        self.movement_actions = [action(self) for action in self.MOVEMENT_ACTIONS]
+        self.specal_actions = [action(self) for action in self.SPECAL_ACTIONS]
+        self.vessel_actions = [action(self) for action in self.VESSEL_ACTIONS]
+        # self.armament_actions = [action for action in self.ARMAMENTS]
+
+
+    def Turn_Reset(self):
+        self.speed_current = self.SPEED
+        self.turns_current = self.TURNS
+
+        for armament in self.ARMAMENTS: armament.Turn_Reset()
 
 
     def Turn(self, angle):
 
         # is already turned
-        if self.turn_rotation == 0: return False
+        if self.turns_current == 0: return False
 
         # fix angle
-        if angle > self.turn_rotation: 
-            angle = self.turn_rotation
-        elif angle < -self.turn_rotation: 
-            angle = -self.turn_rotation
+        if angle > self.turns_current: 
+            angle = self.turns_current
+        elif angle < -self.turns_current: 
+            angle = -self.turns_current
 
         # turn counter
-        self.turn_rotation += abs(angle)
+        self.turns_current += abs(angle)
 
         self.rotation += angle

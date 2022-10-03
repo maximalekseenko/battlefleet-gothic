@@ -1,5 +1,5 @@
-from backend.game.game import Game
-from backend.game.vessel import Vessel
+from backend.game import Game
+from test2 import LunarClassCruiser
 
 
 class PseudoPlayer:
@@ -15,21 +15,28 @@ game = Game()
 # player 1
 player1 = PseudoPlayer(["test"])
 game.Join(player1)
-game.Add_Vessel(Vessel, 0, (0, 20 ), 0  )
-game.Add_Vessel(Vessel, 0, (0, 30 ), 0  )
-game.Add_Vessel(Vessel, 0, (0, 40 ), 0  )
+vessel1p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 20 ), 0  )
+vessel2p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 30 ), 0  )
+vessel3p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 40 ), 0  )
 
 # player 2
 player2 = PseudoPlayer(["test"])
 game.Join(player2)
-game.Add_Vessel(Vessel, 1, (90, 20), 180)
-game.Add_Vessel(Vessel, 1, (90, 30), 180)
-game.Add_Vessel(Vessel, 1, (90, 40), 180)
+vessel1p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 20), 180)
+vessel2p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 30), 180)
+vessel3p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 40), 180)
 
 # start
 game.Start()
 
 
+# from backend.game.common.actions.move import Move
+game_actions = [
+    # turn1
+    [
+        # vessel1p1.movement_actions[0].Get_Done()
+    ]
+]
 
 
 
@@ -57,7 +64,12 @@ def Render(screen:pygame.Surface):
 
 
 def Handle(event:pygame.event.Event):
-    pass
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+        if len(game_actions) == 0: return
+        turn_actions = game_actions.pop(0)
+        for action in turn_actions:
+            game.Handle_Action(player1 ,action)
+            game.Handle_Action(player2 ,action)
 
 
 def Run():
