@@ -15,16 +15,16 @@ game = Game()
 # player 1
 player1 = PseudoPlayer(["test"])
 game.Join(player1)
-vessel1p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 20 ), 0  )
-vessel2p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 30 ), 0  )
-vessel3p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 40 ), 0  )
+vessel1p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 20 ), -90)
+vessel2p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 30 ), -90)
+vessel3p1 = game.Add_Vessel(LunarClassCruiser, 0, (0, 40 ), -90)
 
 # player 2
 player2 = PseudoPlayer(["test"])
 game.Join(player2)
-vessel1p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 20), 180)
-vessel2p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 30), 180)
-vessel3p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 40), 180)
+vessel1p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 20), 90)
+vessel2p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 30), 90)
+vessel3p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 40), 90)
 
 # start
 game.Start()
@@ -34,20 +34,21 @@ game.Start()
 game_actions = [
     # turn1
     [
-        # vessel1p1.movement_actions[0].Get_Done()
-    ]
+        vessel1p1.movement_actions[0].Get_Done((10, 20)),
+        vessel2p1.movement_actions[0].Get_Done((20, 30)),
+        vessel3p1.movement_actions[0].Get_Done((30, 20))
+    ],
 ]
 
 
 
 import pygame
 
+vessel1_image = pygame.Surface((5,10), pygame.SRCALPHA)
+pygame.draw.polygon(vessel1_image, "#a00000", ((0,9),(2,0),(4,9)))
 
-vessel1_image = pygame.Surface((10,5), pygame.SRCALPHA)
-pygame.draw.polygon(vessel1_image, "#a00000", ((0,0),(0,4),(9,2)))
-
-vessel2_image = pygame.Surface((10,5), pygame.SRCALPHA)
-pygame.draw.polygon(vessel2_image, "#00a000", ((0,0),(0,4),(9,2)))
+vessel2_image = pygame.Surface((5,10), pygame.SRCALPHA)
+pygame.draw.polygon(vessel2_image, "#00a000", ((0,9),(2,0),(4,9)))
 
 
 def Render(screen:pygame.Surface):
@@ -61,6 +62,7 @@ def Render(screen:pygame.Surface):
         screen.blit(vessel_image, (
             vessel.position[0] * 2 - vessel_image.get_width() / 2, 
             vessel.position[1] * 2 - vessel_image.get_height() / 2))
+
 
 
 def Handle(event:pygame.event.Event):

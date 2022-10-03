@@ -80,3 +80,19 @@ class Vessel:
         self.turns_current += abs(angle)
 
         self.rotation += angle
+
+
+    def Get_Action(self, name:str, type:str) -> Action:
+        if type == "MOVEMENT":
+            for action in self.movement_actions:
+                if action.NAME == name: return action
+        if type == "ARMAMENT":
+            for action in self.armament_actions:
+                if action.NAME == name: return action
+        if type == "SPECAL":
+            for action in self.specal_actions:
+                if action.NAME == name: return action
+        if type == "VESSEL":
+            for action in self.vessel_actions:
+                if action.NAME == name: return action
+        

@@ -55,8 +55,13 @@ class Game:
         self.is_started = True
 
 
-    def Handle_Action(self, socket, action:list):
-        pass
+    def Handle_Action(self, socket, action_data:dict):
+        if not action_data: return
+
+        actor = action_data['actor']
+
+        action = actor.Get_Action(name=action_data['name'], type=action_data['type'])
+        action.Do(**action_data)
 
 
     def player_thread(self, socket):
