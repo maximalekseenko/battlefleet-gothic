@@ -5,6 +5,7 @@ import backend.game as game
 
 class Move(game.Action):
     NAME = "MOVE"
+    TYPE = "MOVEMENT"
 
 
     def Check(self, position, **kargs) -> bool:
@@ -33,14 +34,12 @@ class Move(game.Action):
         
         self.vessel.position = position
 
-        
-
 
     def Get_Done(self, position, **kargs) -> dict:
         if not self.Check(position): return None
 
         return {
-            'type': "MOVEMENT",
+            'type': self.TYPE,
             'name': self.NAME,
             'actor': self.vessel,
             'position': position,
