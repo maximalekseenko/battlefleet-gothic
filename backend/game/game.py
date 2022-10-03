@@ -13,9 +13,17 @@ class Game:
         self.is_started = False
 
 
-    def Add_Vessel(self, vessel_type, owner_index:int, position:tuple[int, int], rotation:int):
-        self.forces.append(vessel_type(self.players[owner_index], position, rotation, self.vessel_id_last + 1))
+    def Add_Vessel(self, vessel_type, owner_index:int, position:tuple[int, int], rotation:int) -> Vessel:
+
+        # create new vessel
+        new_vessel = vessel_type(self.players[owner_index], position, rotation, self.vessel_id_last + 1)
+        
+        # modify game data
         self.vessel_id_last += 1
+        self.forces.append(new_vessel)
+
+        # return
+        return new_vessel
 
 
     def Join(self, socket, slot:int=None) -> None:
