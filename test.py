@@ -24,7 +24,7 @@ player2 = PseudoPlayer(["test"])
 game.Join(player2)
 vessel1p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 20), 90)
 vessel2p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 30), 90)
-vessel3p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 40), 90)
+vessel3p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 40), 45)
 
 # start
 game.Start()
@@ -34,9 +34,9 @@ game.Start()
 game_actions = [
     # turn1
     [
-        vessel1p1.movement_actions[0].Get_Done((10, 20)),
-        vessel2p1.movement_actions[0].Get_Done((20, 30)),
-        vessel3p1.movement_actions[0].Get_Done((30, 20))
+        vessel1p1.movement_actions[0].Get_Done(game, (10, 20)),
+        vessel2p1.movement_actions[0].Get_Done(game, (20, 30)),
+        vessel3p1.movement_actions[0].Get_Done(game, (30, 20))
     ],
 ]
 
@@ -59,10 +59,17 @@ def Render(screen:pygame.Surface):
     for vessel in game.forces:
         vessel_image = vessel1_image.copy() if vessel.owner==player1 else vessel2_image.copy()
         vessel_image = pygame.transform.rotate(vessel_image, vessel.rotation)
+
         screen.blit(vessel_image, (
             vessel.position[0] * 2 - vessel_image.get_width() / 2, 
             vessel.position[1] * 2 - vessel_image.get_height() / 2))
 
+        mouse_position = pygame.mouse.get_pos()
+        mouse_position = (mouse_position[0]/2, mouse_position[1]/2)
+        target_screen_position = vessel.movement_actions[0].Fix_Args(game, mouse_position)['position']
+        target_screen_position = (target_screen_position[0] * 2, target_screen_position[1] * 2)
+        # action
+        pygame.draw.line(screen, "#ff0000", (vessel.position[0] * 2, vessel.position[1] * 2), target_screen_position)
 
 
 def Handle(event:pygame.event.Event):
@@ -72,6 +79,9 @@ def Handle(event:pygame.event.Event):
         for action in turn_actions:
             game.Handle_Action(player1 ,action)
             game.Handle_Action(player2 ,action)
+
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        pass
 
 
 def Run():

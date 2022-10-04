@@ -61,7 +61,7 @@ class Game:
         actor = action_data['actor']
 
         action = actor.Get_Action(name=action_data['name'], type=action_data['type'])
-        action.Do(**action_data)
+        action.Do(self, **action_data)
 
 
     def player_thread(self, socket):
