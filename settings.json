@@ -1,1 +1,1 @@
-{"background_color": [50, 50, 50], "ui_color": [50, 50, 150], "neutral_color": [150, 150, 150], "player_color": [50, 150, 50], "enemy_color": [150, 50, 50], "player_name": "Necromax", "server_ip": "192.168.1.127", "server_port": "5555", "button_color": [0, 0, 0]}
+{"background_color": [50, 50, 50], "ui_color": [50, 50, 150], "neutral_color": [150, 150, 150], "player_color": [50, 150, 255], "enemy_color": [150, 50, 50], "player_name": "Necromax", "server_ip": "192.168.1.127", "server_port": "5555", "button_color": [0, 0, 0]}

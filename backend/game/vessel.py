@@ -55,7 +55,7 @@ class Vessel:
         self.movement_actions = [action(self) for action in self.MOVEMENT_ACTIONS]
         self.specal_actions = [action(self) for action in self.SPECAL_ACTIONS]
         self.vessel_actions = [action(self) for action in self.VESSEL_ACTIONS]
-        # self.armament_actions = [action for action in self.ARMAMENTS]
+        self.armament_actions = [action for action in self.ARMAMENTS]
 
 
     def Turn_Reset(self):

@@ -7,7 +7,6 @@ class Move(game.Action):
     NAME = "MOVE"
     TYPE = "MOVEMENT"
 
-
     def Fix_Args(self, game:game.Game, position, **kargs) -> dict:
 
         delta_x, delta_y = sin(radians(self.vessel.rotation)), cos(radians(self.vessel.rotation))

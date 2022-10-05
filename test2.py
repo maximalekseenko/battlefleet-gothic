@@ -1,3 +1,4 @@
+from backend.game.action import Action
 from backend.game.common.actions.move import Move
 from backend.game.vessel import Vessel
 from backend.game.armament import Armament, FIREARC
@@ -19,7 +20,6 @@ class LunarClassCruiser(Vessel):
 
 
     # actions
-    MOVEMENT_ACTIONS = [Move]
-    SPECAL_ACTIONS = []
-    VESSEL_ACTIONS = []
-    ARMAMENT_ACTIONS = []
+    MOVEMENT_ACTIONS = [Move,Action]
+    SPECAL_ACTIONS = [Action,Action,Action,Action,Action,Action]
+    VESSEL_ACTIONS = [Action,Action,Action]
