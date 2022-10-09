@@ -15,12 +15,12 @@ class MapMenu(Scene):
         self.act:GameAct
 
 
-        # TODO: DELETE
-        self.vessel1_image = pygame.Surface((5,10), pygame.SRCALPHA)
-        pygame.draw.polygon(self.vessel1_image, "#a00000", ((0,9),(2,0),(4,9)))
-
-        self.vessel2_image = pygame.Surface((5,10), pygame.SRCALPHA)
-        pygame.draw.polygon(self.vessel2_image, "#00a000", ((0,9),(2,0),(4,9)))
+    # TODO: DELETE
+    from backend.game.vessel import Vessel
+    def Get_Vessel_Image(self, vessel:Vessel):
+        vessel_image = pygame.Surface((5,10), pygame.SRCALPHA)
+        pygame.draw.polygon(vessel_image, vessel.owner.color, ((0,9),(2,0),(4,9)))
+        return vessel_image
 
 
     # ----------ON_STUFF----------
@@ -38,7 +38,7 @@ class MapMenu(Scene):
 
     def On_Render(self) -> None:
         for vessel in self.act.game.forces:
-            vessel_image = self.vessel1_image.copy() if vessel.owner==0 else self.vessel2_image.copy()
+            vessel_image = self.Get_Vessel_Image(vessel)
             vessel_image = pygame.transform.rotate(vessel_image, vessel.rotation)
 
             self.surface.blit(vessel_image, (
@@ -50,7 +50,7 @@ class MapMenu(Scene):
             target_screen_position = vessel.movement_actions[0].Fix_Args(self.act.game, mouse_position)['position']
             target_screen_position = (target_screen_position[0] * 2, target_screen_position[1] * 2)
             # action
-            pygame.draw.line(self.surface, "#ff0000", (vessel.position[0] * 2, vessel.position[1] * 2), target_screen_position)
+            # pygame.draw.line(self.surface, "#ff0000", (vessel.position[0] * 2, vessel.position[1] * 2), target_screen_position)
 
             self.act.surface.blit(self.surface, self.rect)
 

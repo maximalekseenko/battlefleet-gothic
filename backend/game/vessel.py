@@ -1,5 +1,6 @@
 from .action import Action
 from .armament import Armament
+from .player import Player
 
 
 
@@ -25,10 +26,10 @@ class Vessel:
     LEADERSHIP:int
 
 
-    def __init__(self, owner, position:tuple[int,int], rotation:int, id:int) -> None:
+    def __init__(self, owner:Player, position:tuple[int,int], rotation:int, id:int) -> None:
 
         # game variables
-        self.owner = owner
+        self.owner:Player = owner
         self.id:int = id
         self.position:tuple[int,int] = position
         self.rotation:int = rotation

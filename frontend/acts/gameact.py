@@ -31,19 +31,16 @@ class GameAct(Act):
         self.game:Game = Game()
 
         # TODO: DELETE
-        # player1 = PseudoPlayer(["test"])
         from test2 import LunarClassCruiser
-        self.game.Join(1)
-        vessel1p1 = self.game.Add_Vessel(LunarClassCruiser, 0, (0, 20 ), -90)
-        vessel2p1 = self.game.Add_Vessel(LunarClassCruiser, 0, (0, 30 ), -90)
-        vessel3p1 = self.game.Add_Vessel(LunarClassCruiser, 0, (0, 40 ), -90)
+        p1 = self.game.Join(1)
+        vessel1p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 20 ), -90)
+        vessel2p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 30 ), -90)
+        vessel3p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 40 ), -90)
 
-        # player 2
-        # player2 = PseudoPlayer(["test"])
-        self.game.Join(2)
-        vessel1p2 = self.game.Add_Vessel(LunarClassCruiser, 1, (90, 20), 90)
-        vessel2p2 = self.game.Add_Vessel(LunarClassCruiser, 1, (90, 30), 90)
-        vessel3p2 = self.game.Add_Vessel(LunarClassCruiser, 1, (90, 40), 45)
+        p2 = self.game.Join(2)
+        vessel1p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (90, 20), 90)
+        vessel2p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (90, 30), 90)
+        vessel3p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (90, 40), 45)
 
         self.game.Start()
 
