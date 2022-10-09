@@ -12,9 +12,6 @@ class GameAct(Act):
 
         # surface
         self.surface = pygame.display.get_surface()
-        self.mapsurface = pygame.Surface((
-            self.surface.get_width() * 2/4, 
-            self.surface.get_height()))
         self.vessellistsurface = pygame.Surface((
             self.surface.get_width() * 1/4,
             self.surface.get_height()))
@@ -26,7 +23,7 @@ class GameAct(Act):
         from frontend.scenes import ConnectionMenu, ActionsMenu, MapMenu, VessellistMenu
         self.connectionmenu:ConnectionMenu = ConnectionMenu(self, self.surface)
         self.actionsmenu:ActionsMenu = ActionsMenu(self)
-        self.mapmenu:MapMenu = MapMenu(self, self.mapsurface)
+        self.mapmenu:MapMenu = MapMenu(self)
         self.vessellistmenu:VessellistMenu = VessellistMenu(self, self.vessellistsurface)
 
         # game
@@ -67,9 +64,18 @@ class GameAct(Act):
 
         # actions menu
         self.actionsmenu.rect = pygame.Rect(
-            0, 0,
+            0,
+            0,
             self.surface.get_width() * 1/4,
             self.surface.get_height())
+
+        # map menu
+        self.mapmenu.rect = pygame.Rect(
+            self.actionsmenu.rect.right,
+            0,
+            self.surface.get_width() * 2/4,
+            self.surface.get_height())
+
 
     def On_Open(self) -> None:
 
@@ -112,20 +118,12 @@ class GameAct(Act):
 
         # fill background
         self.surface.fill(theatre.settings["background_color"])
-        self.mapsurface.fill(theatre.settings["background_color"])
 
         # render menus if needed
         self.connectionmenu.Render()
         self.actionsmenu.Render()
         self.mapmenu.Render()
         self.vessellistmenu.Render()
-
-        # collect surfaces
-        # self.surface.blit(self.actionssurface, (0, 0))
-        # self.surface.blit(self.mapsurface, (self.actionssurface.get_width(), 0))
-        # self.surface.blit(self.vessellistsurface, (self.surface.get_width() - self.vessellistsurface.get_width(), 0))
-        # self.surface.blit(self.minimapsurface, (self.surface.get_width() - self.minimapsurface.get_width(), 0))
-        
         
         
         

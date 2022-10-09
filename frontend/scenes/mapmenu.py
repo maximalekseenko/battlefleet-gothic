@@ -7,8 +7,8 @@ from backend.theatre import theatre
 
 
 class MapMenu(Scene):
-    def __init__(self, act, surface: pygame.Surface) -> None:
-        super().__init__(act, surface)
+    def __init__(self, act) -> None:
+        super().__init__(act)
 
         # for snippets
         from frontend.acts import GameAct
@@ -29,7 +29,7 @@ class MapMenu(Scene):
 
 
     def On_Open(self) -> None:
-        pass
+        self.Update()
 
     
     def On_Handle(self, event: pygame.event.Event) -> None:
@@ -51,5 +51,7 @@ class MapMenu(Scene):
             target_screen_position = (target_screen_position[0] * 2, target_screen_position[1] * 2)
             # action
             pygame.draw.line(self.surface, "#ff0000", (vessel.position[0] * 2, vessel.position[1] * 2), target_screen_position)
+
+            self.act.surface.blit(self.surface, self.rect)
 
 
