@@ -47,14 +47,12 @@ class SpecalOrdersHolder(Element):
                 self.rect.y + i // cols * 51,
                 50,50),
                 lambda: self.btn_click(i)))
-            print(i)
         
         # is_highlighted
         self.is_highlighted = self.rect.collidepoint(pygame.mouse.get_pos())
 
 
     def btn_click(self, index):
-        print(index)
         self.scene.selected_action=self.scene.selected_vessel.specal_actions[index]
 
 
