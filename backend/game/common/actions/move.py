@@ -53,3 +53,4 @@ class Move(game.Action):
             'actor': self.vessel,
             'position': position,
         }
+
