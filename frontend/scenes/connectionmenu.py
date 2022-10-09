@@ -19,8 +19,8 @@ class ConnectionMenu(Scene):
         
         self.text:pygame.Surface = theatre.FONT60.render("", 1, theatre.settings['player_color'])
 
-        self.btn_connect:MenuButton = MenuButton(self, text="Connect", from_center_top=(0, 200), on_click=self.btn_connect_click)
-        self.btn_cancel:MenuButton = MenuButton(self, text="AAA", from_center_top=(0, 400), on_click=self.btn_cancel_click)
+        self.btn_connect:MenuButton = MenuButton(self, text="Connect", topcenter=(0, 200), on_click=self.btn_connect_click)
+        self.btn_cancel:MenuButton = MenuButton(self, text="AAA", topcenter=(0, 400), on_click=self.btn_cancel_click)
 
         self.is_connectiong:bool = False
 

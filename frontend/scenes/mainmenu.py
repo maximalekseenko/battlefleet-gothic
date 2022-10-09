@@ -18,9 +18,9 @@ class MainMenu(Scene):
         from frontend.elements import MenuButton
         from engine import Element
         self.elements:list[Element] = [
-            MenuButton(self, text="Play", from_center_top=(0, 100), on_click=self.btn_play_click),
-            MenuButton(self, text="Settings", from_center_top=(0, 200), on_click=self.btn_settings_click),
-            MenuButton(self, text="Exit", from_center_top=(0, 300), on_click=self.btn_exit_click),
+            MenuButton(self, text="Play", topcenter=(0, 100), on_click=self.btn_play_click),
+            MenuButton(self, text="Settings", topcenter=(0, 200), on_click=self.btn_settings_click),
+            MenuButton(self, text="Exit", topcenter=(0, 300), on_click=self.btn_exit_click),
         ]
 
     # ----------BUTTONS----------

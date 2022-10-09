@@ -8,19 +8,15 @@ from backend.theatre import theatre
 
 
 class MenuButton(Element):
-    def __init__(self, scene, text:str, from_center_top:tuple[int,int], on_click) -> None:
+    def __init__(self, scene, text:str, topcenter:tuple[int,int], on_click) -> None:
 
         # super
-        super().__init__(scene)
+        super().__init__(scene, (topcenter, (200, 30)))
 
         # variables
+        self.topcenter = topcenter
         self.text:str = text
-        self.from_center_top:tuple[int,int] = from_center_top
-        self.surface = pygame.display.get_surface()
         self.on_click = on_click
-
-        # rect
-        self.rect = pygame.Rect(0, 0, 200, 30)
 
         # update
         self.Update()
@@ -29,10 +25,8 @@ class MenuButton(Element):
     def On_Update(self):
 
         # rect
-        self.rect.x = self.from_center_top[0] + self.surface.get_size()[0] / 2
-        self.rect.y = self.from_center_top[1]
-        self.rect.x -= self.rect.width / 2
-        self.rect.y -= self.rect.height / 2
+        self.rect.centerx = self.scene.rect.centerx + self.topcenter[0]
+        self.rect.centery = self.topcenter[1]
         
         # surf
         self.surf = pygame.Surface(self.rect.size, pygame.SRCALPHA)

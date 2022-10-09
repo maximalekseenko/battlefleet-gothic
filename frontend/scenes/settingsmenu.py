@@ -27,7 +27,7 @@ class SettingsMenu(Scene):
             TextSetting(self, from_center_top=(125, 140), setting_name="Name", setting_key="player_name"),
             TextSetting(self, from_center_top=(125, 180), setting_name="IP", setting_key="server_ip"),
             TextSetting(self, from_center_top=(125, 220), setting_name="Port", setting_key="server_port"),
-            MenuButton(self, text="Save and back", from_center_top=(0, 400), on_click=self.btn_back_click)
+            MenuButton(self, text="Save and back", topcenter=(0, 400), on_click=self.btn_back_click)
         ]
 
 
