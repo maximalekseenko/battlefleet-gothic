@@ -23,7 +23,6 @@ class SpecalOrdersHolder(Element):
         self.scene:ActionsMenu
 
         # variables
-        self.highlight_id = -1
         self.orders_clickables:list[Clickable] = list()
         self.height:int = 0
 
@@ -46,11 +45,17 @@ class SpecalOrdersHolder(Element):
             self.orders_clickables.append(Clickable(self.scene, pygame.Rect(
                 self.rect.x + i % cols * 51 + row_move,
                 self.rect.y + i // cols * 51,
-                50,
-                50), None))
+                50,50),
+                lambda: self.btn_click(i)))
+            print(i)
         
         # is_highlighted
         self.is_highlighted = self.rect.collidepoint(pygame.mouse.get_pos())
+
+
+    def btn_click(self, index):
+        print(index)
+        self.scene.selected_action=self.scene.selected_vessel.specal_actions[index]
 
 
     def On_Handle(self, event:pygame.event.Event):

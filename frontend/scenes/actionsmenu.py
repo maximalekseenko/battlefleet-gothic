@@ -20,7 +20,7 @@ class ActionsMenu(Scene):
         self.elements:list[Element] = list()
 
         # variables
-        self.scrolled_height = 0
+        self.scrolled_value = 0
         
         # public variables
         self.selected_vessel:Vessel = None
@@ -54,14 +54,9 @@ class ActionsMenu(Scene):
             # element heights
             height = 0
             for element in self.elements: 
-                element.height = height
+                element.rect.top = height + self.scrolled_value
                 element.Update()
-                print(height)
                 height += element.rect.height
-
-            
-        # surface
-        self.rect = pygame.Rect(self.rect.topleft, (self.rect.width, height))
 
 
     def On_Open(self) -> None:
@@ -69,44 +64,36 @@ class ActionsMenu(Scene):
 
     
     def On_Handle(self, event: pygame.event.Event) -> None:
-        # # fix event position
-        # if hasattr(event, 'pos'): 
-        #     event_pos_old = (event.pos[0], event.pos[1])
-        #     event.pos = (event.pos[0] - self.rect.left, event.pos[1] - self.rect.top - self.scrolled_height)
 
         # scroll
         if event.type == pygame.MOUSEWHEEL:
             if self.rect.collidepoint(pygame.mouse.get_pos()):
-                self.scrolled_height += event.y
+                if event.y != 0:
+                    self.scrolled_value += event.y
 
-                # validate
-                if self.scrolled_height > 0: self.scrolled_height = 0
-                if self.scrolled_height < -self.rect.height: self.scrolled_height = -self.rect.height
-        # # check if in this menu
-        # if event.type == pygame.MOUSEBUTTONDOWN and not self.act.actionsmenu_rect.collidepoint(event.pos): return
-        # if event.type == pygame.MOUSEBUTTONUP and not self.act.actionsmenu_rect.collidepoint(event.pos): return
-        # if event.type == pygame.MOUSEWHEEL and not self.act.actionsmenu_rect.collidepoint(event.pos): return
-        # if event.type == pygame.MOUSEMOTION and not self.act.actionsmenu_rect.collidepoint(event.pos): return
+                    # # validate
+                    # if self.scrolled_value > 0: self.scrolled_value = 0
+                    # if self.scrolled_value < -self.rect.height: self.scrolled_value = -self.rect.height
+
+                    self.Update()
 
         # handle to elements
         for element in self.elements: element.Handle(event)
-
-        # # unfix event position
-        # if hasattr(event, 'pos'): event.pos = event_pos_old
-
 
 
     def On_Render(self) -> None:
 
         # render background and outline
         self.surface.fill(theatre.settings['background_color'])
-        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], self.surface.get_rect(), 1)
+        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], self.rect, 2)
 
         # render elements
+        ## vessel not selected
         if self.selected_vessel == None: 
-            self.surface.blit(self.noselection, self.noselection.get_rect(center=self.surface.get_rect().center))
+            self.act.surface.blit(self.noselection, self.noselection.get_rect(center=self.rect.center))
+        ## vessel selected
         else: 
             for element in self.elements: element.Render(self.surface)
 
         # render on screen
-        self.act.surface.blit(self.surface, (self.rect.left, self.rect.top + self.scrolled_height))
+        self.act.surface.blit(self.surface, (0,0))
