@@ -17,6 +17,7 @@ class LunarClassCruiser(Vessel):
     SPEED = 20
     TURNS = 45
     ARMAMENTS = [WeaponsBattery(FIREARC.LEFT), WeaponsBattery(FIREARC.RIGHT)]
+    BASE_RADIUS = 5
 
 
     # actions

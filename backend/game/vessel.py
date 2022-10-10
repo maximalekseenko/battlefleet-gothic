@@ -1,3 +1,6 @@
+import math
+
+
 from .action import Action
 from .armament import Armament
 from .player import Player
@@ -24,6 +27,7 @@ class Vessel:
     TURNS:int
     ARMAMENTS:list[Armament]
     LEADERSHIP:int
+    BASE_RADIUS:int
 
 
     def __init__(self, owner:Player, position:tuple[int,int], rotation:int, id:int) -> None:
@@ -97,3 +101,7 @@ class Vessel:
             for action in self.vessel_actions:
                 if action.NAME == name: return action
         
+
+    def Is_Collision(self, point):
+        return math.dist(self.position, point) <= self.BASE_RADIUS
+
