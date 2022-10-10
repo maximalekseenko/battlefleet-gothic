@@ -37,7 +37,9 @@ class MapMenu(Scene):
     def On_Handle(self, event: pygame.event.Event) -> None:
 
         # validate
-        if event.type == pygame.MOUSEBUTTONDOWN and not self.rect.collidepoint(event.pos): return
+        if event.type == pygame.MOUSEBUTTONDOWN: 
+            if not self.rect.collidepoint(event.pos): return
+            else: self.act.actionsmenu.selected_action.Do(position=self.Convert_To_Map(event.pos))
 
         # move
         if event.type == pygame.KEYDOWN:
@@ -48,10 +50,6 @@ class MapMenu(Scene):
             else: return
 
             for vessel_visual in self.vessel_visuals: vessel_visual.Update()
-
-        # AAAA
-        if event.type == pygame.MOUSEBUTTONDOWN: 
-            self.act.actionsmenu.Select_Vessel(None)
 
         for vessel_visual in self.vessel_visuals:
             vessel_visual.Handle(event)
@@ -70,13 +68,13 @@ class MapMenu(Scene):
             vessel_visual.Render(self.surface)
 
         # selected oreder
-        if self.act.actionsmenu.selected_action != None:
-            mouse_position = pygame.mouse.get_pos()
-            mouse_position = (mouse_position[0]/2, mouse_position[1]/2)
-            target_screen_position = self.act.actionsmenu.selected_vessel.movement_actions[0].Fix_Args(self.act.game, mouse_position)['position']
-            target_screen_position = (target_screen_position[0] * 2, target_screen_position[1] * 2)
-            # action
-            pygame.draw.line(self.surface, "#ff0000", (self.act.actionsmenu.selected_vessel.position[0] * 2, self.act.actionsmenu.selected_vessel.position[1] * 2), target_screen_position)
+        # if self.act.actionsmenu.selected_action != None:
+        #     mouse_position = pygame.mouse.get_pos()
+        #     mouse_position = (mouse_position[0]/2, mouse_position[1]/2)
+        #     target_screen_position = self.act.actionsmenu.selected_vessel.movement_actions[0].Fix_Args(self.act.game, mouse_position)['position']
+        #     target_screen_position = (target_screen_position[0] * 2, target_screen_position[1] * 2)
+        #     # action
+        #     pygame.draw.line(self.surface, "#ff0000", (self.act.actionsmenu.selected_vessel.position[0] * 2, self.act.actionsmenu.selected_vessel.position[1] * 2), target_screen_position)
 
         # finish
         self.act.surface.blit(self.surface, self.rect)

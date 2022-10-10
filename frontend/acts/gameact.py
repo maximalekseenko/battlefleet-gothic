@@ -19,6 +19,10 @@ class GameAct(Act):
             self.surface.get_width() * 1/4, 
             self.surface.get_height()))
 
+        # game
+        from backend.game import Game
+        self.game:Game = Game()
+
         # scenes
         from frontend.scenes import ConnectionMenu, ActionsMenu, MapMenu, VessellistMenu
         self.connectionmenu:ConnectionMenu = ConnectionMenu(self, self.surface)
@@ -26,9 +30,6 @@ class GameAct(Act):
         self.mapmenu:MapMenu = MapMenu(self)
         self.vessellistmenu:VessellistMenu = VessellistMenu(self, self.vessellistsurface)
 
-        # game
-        from backend.game import Game
-        self.game:Game = Game()
 
         # TODO: DELETE
         from test2 import LunarClassCruiser
@@ -121,6 +122,3 @@ class GameAct(Act):
         self.actionsmenu.Render()
         self.mapmenu.Render()
         self.vessellistmenu.Render()
-        
-        
-        

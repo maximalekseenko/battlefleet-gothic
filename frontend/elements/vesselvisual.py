@@ -33,11 +33,6 @@ class VesselVisual(Element):
 
     def On_Handle(self, event:pygame.event.Event):
 
-        # select
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.vessel.Is_Collision(self.scene.Convert_To_Map(event.pos)):
-                self.scene.act.actionsmenu.Select_Vessel(self.vessel)
-
         # highlight
         if event.type == pygame.MOUSEMOTION:
             self.is_highlighted = self.vessel.Is_Collision(self.scene.Convert_To_Map(event.pos))

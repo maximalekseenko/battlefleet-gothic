@@ -1,5 +1,6 @@
 import pygame
 from backend.game import Vessel, Action
+from backend.game.common.actions.selectvessel import SelectVessel
 
 # engine
 from engine import Scene, Element
@@ -24,12 +25,7 @@ class ActionsMenu(Scene):
         
         # public variables
         self.selected_vessel:Vessel = None
-        self.selected_action:Action = None
-
-
-    def Select_Vessel(self, vessel:Vessel):
-        self.selected_vessel = vessel
-        self.Update()
+        self.selected_action:Action = SelectVessel(self)
 
 
     # ----------ON_STUFF----------

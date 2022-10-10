@@ -7,6 +7,8 @@ class Action:
         self.vessel:Vessel = vessel
 
 
-    def Check(self, **kargs) -> bool: pass
+    def Is_Valid_Args(self, **kargs) -> bool: pass
+    def Fix_Args(self, **kargs) -> dict: pass
+
     def Do(self, **kargs) -> None: pass
     def Get_Done(self, **kargs) -> dict: pass

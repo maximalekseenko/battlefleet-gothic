@@ -1,6 +1,7 @@
 import pygame
 import backend.game as game
 from backend.game.player import Player
+from backend.game.vessel import Vessel
 
 
 class Game:
@@ -90,3 +91,14 @@ class Game:
 
     def Get_Player_Color(self):
         return self.player_colors.pop()
+
+
+    def Get_Vessel_In_Position(self, postion, is_enemy=False, is_ally=False, is_neutral=False, is_own=False) -> Vessel:
+
+
+        if is_enemy and is_ally and is_neutral and is_own == False: return None
+
+        for vessel in self.forces:
+            if vessel.Is_Collision(postion):
+                return vessel
+
