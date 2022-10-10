@@ -8,6 +8,7 @@ from engine import Theatre
 class Theatre(Theatre):
     def __init__(self) -> None:
         super().__init__()
+        pygame.key.set_repeat(100, 10)
 
         # consts
         self.FONT60 = pygame.font.Font(None, 60)

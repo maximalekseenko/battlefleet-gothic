@@ -27,6 +27,11 @@ class ActionsMenu(Scene):
         self.selected_action:Action = None
 
 
+    def Select_Vessel(self, vessel:Vessel):
+        self.selected_vessel = vessel
+        self.Update()
+
+
     # ----------ON_STUFF----------
     def On_Update(self):
 
@@ -37,8 +42,8 @@ class ActionsMenu(Scene):
             text_a = theatre.FONT24.render("NO VESSEL", 1, theatre.settings['enemy_color'])
             text_b = theatre.FONT24.render("SELECTED", 1, theatre.settings['enemy_color'])
             self.noselection = pygame.Surface((self.rect.width, text_a.get_height() + text_b.get_height()), pygame.SRCALPHA)
-            self.noselection.blit(text_a, text_a.get_rect(centerx=self.rect.centerx, y=0))
-            self.noselection.blit(text_b, text_b.get_rect(centerx=self.rect.centerx, y=text_a.get_height()))
+            self.noselection.blit(text_a, text_a.get_rect(centerx=self.noselection.get_rect().centerx, y=0))
+            self.noselection.blit(text_b, text_b.get_rect(centerx=self.noselection.get_rect().centerx, y=text_a.get_height()))
         else:
             from frontend.elements import Separatior, SpecalOrdersHolder
             self.elements.clear()
@@ -85,7 +90,7 @@ class ActionsMenu(Scene):
 
         # render background and outline
         self.surface.fill(theatre.settings['background_color'])
-        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], self.rect, 2)
+        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 2)
 
         # render elements
         ## vessel not selected

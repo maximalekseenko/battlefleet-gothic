@@ -13,13 +13,13 @@ class Game:
 
         from random import shuffle
         self.player_colors:list[pygame.Color] = [
-            "#505050", #grey
-            "#500000", #red
-            "#005000", #green
-            "#000050", #blue
-            "#500050", #magenta
-            "#505000", #yellow
-            "#005050", #cyan
+            "#a0a0a0", #grey
+            "#a00000", #red
+            "#00a000", #green
+            "#0000a0", #blue
+            "#a000a0", #magenta
+            "#a0a000", #yellow
+            "#00a0a0", #cyan
             ]
         shuffle(self.player_colors)
 
