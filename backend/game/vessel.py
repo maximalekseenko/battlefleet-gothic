@@ -22,6 +22,7 @@ class Vessel:
 
 
     # datasheet
+    CLASSNAME:int
     HITS:int
     TYPE:int
     SPEED:int

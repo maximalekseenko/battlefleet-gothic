@@ -13,6 +13,7 @@ class WeaponsBattery(Armament):
 class LunarClassCruiser(Vessel):
 
     # datasheet
+    CLASSNAME = "LUNAR"
     HITS = 8
     TYPE = Vessel.TYPECRUISER
     SPEED = 20
