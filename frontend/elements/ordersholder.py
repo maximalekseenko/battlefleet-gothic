@@ -22,7 +22,7 @@ class OrdersHolder(Element):
         self.scene:ActionsMenu
 
         # variables
-        self.orders_buttons:list[Element] = [order.Get_Visual(self) for order in orders]
+        self.orders_buttons:list[Element] = [order.Get_Visual(self.scene) for order in orders]
 
 
     def On_Update(self):

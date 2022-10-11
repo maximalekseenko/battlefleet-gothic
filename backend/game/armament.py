@@ -2,7 +2,7 @@ from enum import Enum
 
 
 
-class FIREARC(Enum):
+class ARC(Enum):
     LEFT = 0
     FRONT = 1
     RIGHT = 2
@@ -12,10 +12,15 @@ class FIREARC(Enum):
 
 class Armament:
 
-    def __init__(self, firearc) -> None:
-        self.range = 30
-        self.firepower = 6
-        self.firearc = firearc
+    COLOR:str
+
+    NAME:str
+    RANGE:int
+    FIREPOWER:int
+    FIREARC:ARC
+
+    def __init__(self) -> None:
+        pass
 
         # turn stuff
         self.turn_is_used:bool

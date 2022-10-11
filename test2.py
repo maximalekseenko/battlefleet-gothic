@@ -2,12 +2,36 @@ from backend.game.action import Action
 from backend.game.common.actions.move import Move
 from backend.game.common.actions.allaheadfull import AllAheadFull
 from backend.game.vessel import Vessel
-from backend.game.armament import Armament, FIREARC
+from backend.game.armament import Armament, ARC
 
 
-class WeaponsBattery(Armament):
-    def __init__(self, firearc) -> None:
-        super().__init__(firearc)
+class WeaponsBatteryPort(Armament):
+    COLOR = "#a0a000"
+    NAME = "Weapons Battery"
+    RANGE = 60
+    FIREPOWER = 6
+    FIREARC:ARC.LEFT
+
+class WeaponsBatteryStarboard(Armament):
+    COLOR = "#a0a000"
+    NAME = "Weapons Battery"
+    RANGE = 60
+    FIREPOWER = 6
+    FIREARC:ARC.LEFT
+
+class LancePort(Armament):
+    COLOR = "#0000a0"
+    NAME = "Weapons Battery"
+    RANGE = 30
+    FIREPOWER = 6
+    FIREARC:ARC.LEFT
+
+class LanceStarboard(Armament):
+    COLOR = "#a0a000"
+    NAME = "Weapons Battery"
+    RANGE = 30
+    FIREPOWER = 6
+    FIREARC:ARC.LEFT
 
 
 class LunarClassCruiser(Vessel):
@@ -15,10 +39,10 @@ class LunarClassCruiser(Vessel):
     # datasheet
     CLASSNAME = "LUNAR"
     HITS = 8
-    TYPE = Vessel.TYPECRUISER
+    TYPE = "CRUISER"
     SPEED = 20
     TURNS = 45
-    ARMAMENTS = [WeaponsBattery(FIREARC.LEFT), WeaponsBattery(FIREARC.RIGHT)]
+    ARMAMENTS = [WeaponsBatteryPort(), WeaponsBatteryStarboard(), LancePort(), LanceStarboard()]
     BASE_RADIUS = 5
 
 

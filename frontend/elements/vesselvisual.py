@@ -32,6 +32,59 @@ class VesselVisual(Element):
         
         self.rect.center = self.scene.Convert_To_Surface(self.vessel.position)
 
+        self._Update_Tooltip()
+
+
+    def _Update_Tooltip(self):
+        self.tooltip_surface = pygame.Surface((120, 100), pygame.SRCALPHA)
+        self.tooltip_surface.fill("#000000a0")
+
+        # top
+        text_type = theatre.FONT12.render(self.vessel.TYPE, 0, self.vessel.owner.color)
+        text_class = theatre.FONT12.render(self.vessel.CLASSNAME, 2, self.vessel.owner.color)
+        self.tooltip_surface.blit(text_type, text_type.get_rect(topleft=(0,0)))
+        self.tooltip_surface.blit(text_class, text_type.get_rect(topright=self.tooltip_surface.get_rect().topright))
+
+        # weaponry
+
+        # characteristics
+        ## hits
+        char_pos = (20,20)
+        char_name = theatre.FONT12.render("HITS", 1, self.vessel.owner.color)
+        char_value = theatre.FONT12.render(f"{self.vessel.hits_current}/{self.vessel.HITS}", 1, self.vessel.owner.color)
+        self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
+        self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
+        ## turns
+        char_pos = (60,20)
+        char_name = theatre.FONT12.render("TURNS", 1, self.vessel.owner.color)
+        char_value = theatre.FONT12.render(f"{self.vessel.TURNS}*", 1, self.vessel.owner.color)
+        self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
+        self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
+        ## shields
+        char_pos = (100,20)
+        char_name = theatre.FONT12.render("Shields", 1, self.vessel.owner.color)
+        char_value = theatre.FONT12.render(f"{self.vessel.TURNS}*", 1, self.vessel.owner.color)
+        self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
+        self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
+        ## armour
+        char_pos = (20,40)
+        char_name = theatre.FONT12.render("ARMOUR", 1, self.vessel.owner.color)
+        char_value = theatre.FONT12.render(f"{self.vessel.TURNS}*", 1, self.vessel.owner.color)
+        self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
+        self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
+        ## turrets
+        char_pos = (60,40)
+        char_name = theatre.FONT12.render("TURRETS", 1, self.vessel.owner.color)
+        char_value = theatre.FONT12.render(f"{self.vessel.TURNS}*", 1, self.vessel.owner.color)
+        self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
+        self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
+        ## turns
+        char_pos = (100,40)
+        char_name = theatre.FONT12.render("TURNS", 1, self.vessel.owner.color)
+        char_value = theatre.FONT12.render(f"{self.vessel.TURNS}*", 1, self.vessel.owner.color)
+        self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
+        self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
+
 
     def On_Tick(self) -> None:
         if self.vessel.Is_Collision(self.scene.Convert_To_Map(pygame.mouse.get_pos())):
@@ -54,16 +107,20 @@ class VesselVisual(Element):
         elif self.is_highlighted: self._Blit_Highlight(target, theatre.settings["neutral_color"])
 
         # tooltip
-        if self.tooltip_time >= 100:
-            self._Blit_Tooltip(target)
+        
+        self.Render_Tooltip(target)
 
         # main
         target.blit(self.surface, self.rect)
 
 
-    def _Blit_Tooltip(self, target):
+    def Render_Tooltip(self, target:pygame.Surface):
+        if self.tooltip_time < 100: return
+
         pygame.draw.line(target, theatre.settings["neutral_color"],
         (self.rect.center), (0, self.rect.centery))
+        
+        target.blit(self.tooltip_surface, self.rect.center)
 
 
     def _Blit_Arcs(self, target:pygame.Surface, color, radius:int, left=True, front=True, right=True, back=True):

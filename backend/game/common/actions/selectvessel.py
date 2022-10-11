@@ -16,16 +16,12 @@ class SelectVessel(game.Action):
         self.game:game.Game = self.scene.act.game
 
 
-    def Is_Valid_Args(self, **kargs) -> bool:pass 
-
-
-    def Do(self, position, **kargs) -> None:
+    def Do(self, position=None) -> None:
         self.scene.selected_vessel = self.game.Get_Vessel_In_Position(position, False, False, False, True)
         self.scene.Update()
         
 
-
-    def Get_Done(self, game:game.Game, position, **kargs) -> dict:
+    def Get_Done(self, game:game.Game, position) -> dict:
         if not self.Check(game, position): return None
 
         return {
