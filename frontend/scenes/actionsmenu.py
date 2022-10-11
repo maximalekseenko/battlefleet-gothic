@@ -88,13 +88,11 @@ class ActionsMenu(Scene):
                 # add separator
                 new_element = Separatior(self, type)
                 new_element.rect.top = top
-                print(new_element.rect.height)
                 top += new_element.rect.height
                 self.elements.append(new_element)
 
                 # add orders holder
                 new_element = OrdersHolder(self, orders)
-                print(new_element.rect.height)
                 new_element.rect.top = top
                 top += new_element.rect.height
                 self.elements.append(new_element)
