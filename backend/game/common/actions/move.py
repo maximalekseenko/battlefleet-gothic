@@ -6,6 +6,16 @@ import backend.game as game
 class Move(game.Action):
     NAME = "MOVE"
     TYPE = "MOVEMENT"
+    DISPLAY_NAME = "MOVE"
+    TOOLTIP = "Move the vessel on up to its maximum."
+
+
+    def __init__(self, vessel) -> None:
+        super().__init__(vessel)
+
+        self.use_minimum = 10
+        self.use_maximum = self.vessel.SPEED
+        
 
     def Fix_Args(self, game:game.Game, position, **kargs) -> dict:
 
@@ -19,8 +29,7 @@ class Move(game.Action):
 
         return kargs
 
-
-    def Check(self, game:game.Game, position, **kargs) -> bool:
+    def Is_Valid_Args(self, position, **kargs) -> bool:
 
         # delta movement
         delta_x = self.vessel.position[0] - position[0]
@@ -54,3 +63,11 @@ class Move(game.Action):
             'position': position,
         }
 
+
+    def Fix_Args(self, **kargs) -> dict: pass
+
+    def Step(self, **kargs): pass
+
+    def Do(self, **kargs) -> None: pass
+
+    def Get_Done(self, **kargs) -> dict: pass

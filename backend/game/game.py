@@ -33,7 +33,7 @@ class Game:
         if type(owner) == int: owner = self.players[owner]
 
         # create new vessel
-        new_vessel = vessel_type(owner, position, rotation, self.vessel_id_last + 1)
+        new_vessel = vessel_type(self, owner, position, rotation, self.vessel_id_last + 1)
         
         # modify game data
         self.vessel_id_last += 1

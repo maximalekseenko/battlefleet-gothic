@@ -41,16 +41,19 @@ class ActionsMenu(Scene):
             self.noselection.blit(text_a, text_a.get_rect(centerx=self.noselection.get_rect().centerx, y=0))
             self.noselection.blit(text_b, text_b.get_rect(centerx=self.noselection.get_rect().centerx, y=text_a.get_height()))
         else:
-            from frontend.elements import Separatior, SpecalOrdersHolder
             self.elements.clear()
-            if len(self.selected_vessel.specal_actions):
-                self.elements += [Separatior(self, "SPECAL"), SpecalOrdersHolder(self)]
-            if len(self.selected_vessel.movement_actions):
-                self.elements += [Separatior(self, "MOVEMENT"), SpecalOrdersHolder(self)]
-            if len(self.selected_vessel.armament_actions):
-                self.elements += [Separatior(self, "ARMAMENTS"), SpecalOrdersHolder(self), SpecalOrdersHolder(self)]
-            if len(self.selected_vessel.vessel_actions):
-                self.elements += [Separatior(self, "OTHER"), SpecalOrdersHolder(self)]
+            orders_by_type:dict[str,list[Action]] = dict()
+
+            # get orders
+            for order in self.selected_vessel.orders.values():
+                if order.TYPE not in orders_by_type: orders_by_type[order.TYPE] = list()
+                orders_by_type[order.TYPE].append(order)
+
+            # add orders to elements
+            from frontend.elements import Separatior, SpecalOrdersHolder
+            for type, orders in orders_by_type.items():
+                self.elements.append(Separatior(self, type))
+                self.elements.append(SpecalOrdersHolder(self)) #TODO: put orders
 
             # element heights
             height = 0

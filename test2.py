@@ -1,5 +1,6 @@
 from backend.game.action import Action
 from backend.game.common.actions.move import Move
+from backend.game.common.actions.allaheadfull import AllAheadFull
 from backend.game.vessel import Vessel
 from backend.game.armament import Armament, FIREARC
 
@@ -21,6 +22,7 @@ class LunarClassCruiser(Vessel):
 
 
     # actions
+    ORDERS = [Move, AllAheadFull]
     MOVEMENT_ACTIONS = [Move,Action]
     SPECAL_ACTIONS = [Action,Action,Action,Action,Action,Action]
     VESSEL_ACTIONS = [Action,Action,Action]

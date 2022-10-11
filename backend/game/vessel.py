@@ -18,6 +18,7 @@ class Vessel:
     SPECAL_ACTIONS:list[Action]
     VESSEL_ACTIONS:list[Action]
     ARMAMENT_ACTIONS:list[Action]
+    ORDERS:list[Action]
 
 
     # datasheet
@@ -30,13 +31,19 @@ class Vessel:
     BASE_RADIUS:int
 
 
-    def __init__(self, owner:Player, position:tuple[int,int], rotation:int, id:int) -> None:
+    def __init__(self, game, owner:Player, position:tuple[int,int], rotation:int, id:int) -> None:
+
+        from .game import Game
+        self.game:Game = game
 
         # game variables
         self.owner:Player = owner
         self.id:int = id
         self.position:tuple[int,int] = position
         self.rotation:int = rotation
+
+
+        self.orders:dict[str,Action]
 
         # turn stuff
         self.movement_actions:list[Action]
@@ -64,6 +71,8 @@ class Vessel:
 
 
     def Turn_Reset(self):
+        self.orders = {order.NAME: order for order in sorted(self.ORDERS, key=Action.Get_Order_Size)}
+
         self.speed_current = self.SPEED
         self.turns_current = self.TURNS
 
@@ -104,4 +113,6 @@ class Vessel:
 
     def Is_Collision(self, point):
         return math.dist(self.position, point) <= self.BASE_RADIUS
+
+
 
