@@ -47,6 +47,11 @@ class GameAct(Act):
 
         self.actionsmenu.selected_vessel = vessel1p1
 
+
+    def On_Tick(self) -> None:
+        self.actionsmenu.Tick()
+        self.mapmenu.Tick()
+
     
     def On_Update(self):
 

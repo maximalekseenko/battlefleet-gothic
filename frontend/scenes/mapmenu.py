@@ -23,6 +23,12 @@ class MapMenu(Scene):
 
 
     # ----------ON_STUFF----------
+
+    def On_Tick(self) -> None:
+        for vessel_visual in self.vessel_visuals:
+            vessel_visual.Tick()
+
+
     def On_Update(self):
         self.vessel_visuals.clear()
 
