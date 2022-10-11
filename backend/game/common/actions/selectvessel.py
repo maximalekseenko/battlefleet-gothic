@@ -20,7 +20,6 @@ class SelectVessel(game.Action):
 
 
     def Do(self, position, **kargs) -> None:
-        print(position, self.game.Get_Vessel_In_Position(position, False, False, False, True))
         self.scene.selected_vessel = self.game.Get_Vessel_In_Position(position, False, False, False, True)
         self.scene.Update()
         
