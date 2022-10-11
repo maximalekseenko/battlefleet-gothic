@@ -7,4 +7,4 @@ from .textsetting import TextSetting
 # game elements
 from .separator import Separatior
 from .movementactions import MovementActions
-from .specalordersholder import SpecalOrdersHolder
+from .ordersholder import OrdersHolder
