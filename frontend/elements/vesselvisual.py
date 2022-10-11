@@ -28,7 +28,7 @@ class VesselVisual(Element):
         pygame.draw.polygon(self.surface, self.vessel.owner.color, ((0,9), (2,0), (4,9)))
         self.surface = pygame.transform.rotate(self.surface, self.vessel.rotation)
         
-        self.rect.center = self.scene.Convert_To_Screen(self.vessel.position)
+        self.rect.center = self.scene.Convert_To_Surface(self.vessel.position)
 
 
     def On_Handle(self, event:pygame.event.Event):
@@ -36,7 +36,6 @@ class VesselVisual(Element):
         # highlight
         if event.type == pygame.MOUSEMOTION:
             self.is_highlighted = self.vessel.Is_Collision(self.scene.Convert_To_Map(event.pos))
-            print(self.is_highlighted)
 
     
     def On_Render(self, target:pygame.Surface):
@@ -47,13 +46,6 @@ class VesselVisual(Element):
 
         # main
         target.blit(self.surface, self.rect)
-
-        # # blit vessel on screen
-        # self.surface.blit(vessel_image, (
-        #     , 
-        #     vessel.position[1] * self.scaled_value - vessel_image.get_height() / self.scaled_value))
-
-
 
 
     def _Blit_Highlight(self, target, color):

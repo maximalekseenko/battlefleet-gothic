@@ -19,7 +19,7 @@ class MapMenu(Scene):
         self.vessel_visuals:list[VesselVisual] = list()
 
         self.scrolled_point:list[int] = [0, 0]
-        self.scaled_value:int = 1
+        self.scaled_value:int = 2
 
 
     # ----------ON_STUFF----------
@@ -61,13 +61,19 @@ class MapMenu(Scene):
 
         # background
         self.surface.fill(theatre.settings['background_color'])
-        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 2)
+        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 1)
+
+        # game borders
+        pygame.draw.rect(self.surface, "#000000", (
+            self.Convert_To_Surface((0, 0)), 
+            (self.act.game.size[0] * self.scaled_value, self.act.game.size[1] * self.scaled_value)
+            ))
 
         # vessels
         for vessel_visual in self.vessel_visuals:
             vessel_visual.Render(self.surface)
 
-        # selected oreder
+        # selected order
         # if self.act.actionsmenu.selected_action != None:
         #     mouse_position = pygame.mouse.get_pos()
         #     mouse_position = (mouse_position[0]/2, mouse_position[1]/2)
@@ -82,12 +88,12 @@ class MapMenu(Scene):
 
     def Convert_To_Map(self, point:list[int]):
         return [
-            point[0] / self.scaled_value - self.scrolled_point[0] - self.rect.left,
-            point[1] / self.scaled_value - self.scrolled_point[1] - self.rect.top
+            (point[0] - self.scrolled_point[0] - self.rect.left) / self.scaled_value,
+            (point[1] - self.scrolled_point[1] - self.rect.top) / self.scaled_value
         ]
 
-    def Convert_To_Screen(self, point:list[int]):
+    def Convert_To_Surface(self, point:list[int]):
         return [
-            (point[0] + self.scrolled_point[0]) * self.scaled_value,
-            (point[1] + self.scrolled_point[1]) * self.scaled_value
+            point[0] * self.scaled_value + self.scrolled_point[0],
+            point[1] * self.scaled_value + self.scrolled_point[1]
         ]
