@@ -23,9 +23,43 @@ class ActionsMenu(Scene):
         # variables
         self.scrolled_value = 0
         
-        # public variables
-        self.selected_vessel:Vessel = None
-        self.selected_action:Action = SelectVessel(self)
+        # private variables
+        self._selected_vessel:Vessel = None
+        self._selected_action:Action = SelectVessel(self)
+
+
+    @property
+    def selected_vessel(self) -> Vessel:
+        return self._selected_vessel
+
+
+    @selected_vessel.setter
+    def selected_vessel(self, value:Vessel|None) -> None:
+
+        # if None
+        if type(value) == None: self._selected_vessel == None
+
+        # if vessel
+        else: self._selected_vessel = value
+
+
+    @property
+    def selected_action(self) -> Action:
+        return self._selected_action
+
+
+    @selected_action.setter
+    def selected_action(self, value:Action|None) -> None:
+
+        # if None
+        if value == None: self._selected_action = SelectVessel(self)
+
+        # if action
+        else: self._selected_action = value
+
+
+    def Position_Action(self, position):
+        self.selected_action.Do(position)
 
 
     # ----------ON_STUFF----------

@@ -36,10 +36,17 @@ class MapMenu(Scene):
     
     def On_Handle(self, event: pygame.event.Event) -> None:
 
-        # validate
         if event.type == pygame.MOUSEBUTTONDOWN: 
             if not self.rect.collidepoint(event.pos): return
-            else: self.act.actionsmenu.selected_action.Do(position=self.Convert_To_Map(event.pos))
+            else:
+
+                # position order
+                if event.button == 1: 
+                    self.act.actionsmenu.Position_Action(self.Convert_To_Map(event.pos))
+
+                # cancel order selection
+                elif event.button == 3:
+                    self.act.actionsmenu.selected_action = None
 
         # move
         if event.type == pygame.KEYDOWN:
