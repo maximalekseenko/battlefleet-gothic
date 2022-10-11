@@ -1,10 +1,10 @@
 import pygame
-from backend.game import Vessel, Action
-from backend.game.common.actions.selectvessel import SelectVessel
 
 # engine
 from engine import Scene, Element
 from backend.theatre import theatre
+from backend.game import Vessel, Action
+from backend.game.common.actions.selectvessel import SelectVessel
 
 
 
@@ -64,9 +64,6 @@ class ActionsMenu(Scene):
 
     # ----------ON_STUFF----------
     def On_Update(self):
-
-        height = self.rect.height
-
         if self.selected_vessel == None:
             # no selection
             text_a = theatre.FONT24.render("NO VESSEL", 1, theatre.settings['enemy_color'])
@@ -77,17 +74,30 @@ class ActionsMenu(Scene):
         else:
             self.elements.clear()
             orders_by_type:dict[str,list[Action]] = dict()
+            top = self.rect.top
 
-            # get orders
+            # pass orders in orders_by_type
             for order in self.selected_vessel.orders.values():
                 if order.TYPE not in orders_by_type: orders_by_type[order.TYPE] = list()
                 orders_by_type[order.TYPE].append(order)
 
-            # add orders to elements
-            from frontend.elements import Separatior, SpecalOrdersHolder
+            # add orders from orders_by_type to self elements
+            from frontend.elements import Separatior, OrdersHolder
             for type, orders in orders_by_type.items():
-                self.elements.append(Separatior(self, type))
-                self.elements.append(SpecalOrdersHolder(self)) #TODO: put orders
+
+                # add separator
+                new_element = Separatior(self, type)
+                new_element.rect.top = top
+                print(new_element.rect.height)
+                top += new_element.rect.height
+                self.elements.append(new_element)
+
+                # add orders holder
+                new_element = OrdersHolder(self, orders)
+                print(new_element.rect.height)
+                new_element.rect.top = top
+                top += new_element.rect.height
+                self.elements.append(new_element)
 
             # element heights
             height = 0

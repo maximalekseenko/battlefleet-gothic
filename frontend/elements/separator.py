@@ -18,6 +18,8 @@ class Separatior(Element):
         # variables
         self.text:str = text
 
+        self.Update()
+
 
     def On_Update(self):
         

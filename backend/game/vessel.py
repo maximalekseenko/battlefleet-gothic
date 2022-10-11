@@ -18,7 +18,7 @@ class Vessel:
     SPECAL_ACTIONS:list[Action]
     VESSEL_ACTIONS:list[Action]
     ARMAMENT_ACTIONS:list[Action]
-    ORDERS:list[Action]
+    ORDERS:list[type[Action]]
 
 
     # datasheet
@@ -71,7 +71,7 @@ class Vessel:
 
 
     def Turn_Reset(self):
-        self.orders = {order.NAME: order for order in sorted(self.ORDERS, key=Action.Get_Order_Size)}
+        self.orders = {order.NAME: order(self) for order in sorted(self.ORDERS, key=Action.Get_Order_Size)}
 
         self.speed_current = self.SPEED
         self.turns_current = self.TURNS

@@ -32,3 +32,8 @@ class Action:
         if self.TYPE == "SPECAL": return 0
         if self.TYPE == "MOVEMENT": return 1
 
+
+    def Get_Visual(self, scene):
+        from .orderbutton import OrderButton
+        return OrderButton(scene, self)
+
