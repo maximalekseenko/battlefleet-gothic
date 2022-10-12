@@ -49,40 +49,21 @@ class Game:
         self.players.append(new_player)
         return new_player
 
-        # # slot specified
-        # if slot != None:
-        #     # validate slot
-        #     ## out of range
-        #     if slot < 0 or slot > len(self.players): return
-        #     ## already occupied
-        #     if self.players[slot] == None: return
-
-        # # slot not specified -> get empty
-        # if slot == None:
-
-        #     # find empty slot
-        #     for slot in range(len(self.players)):
-        #         if self.players[slot] == None: 
-        #             break
-
-        #     # no slots avaliable
-        #     if slot == None: return
-
-        # fill slot
-        # self.players[slot] = socket
-
     
     def Start(self):
         self.is_started = True
 
 
-    def Handle_Action(self, socket, action_data:dict):
-        if not action_data: return
+    def Handle_Order(self, socket, order_data:dict) -> None:
+        if not order_data: return
 
-        actor = action_data['actor']
+        # get vessel
+        vessel = self.Get_Vessel_By_Id(order_data["vesselid"])
+        if vessel.owner.socket != socket: return
 
-        action = actor.Get_Action(name=action_data['name'], type=action_data['type'])
-        action.Do(self, **action_data)
+        # get order
+        order = vessel.Get_Order_By_Id(order_data["orderid"])
+        order.Give(**order_data)
 
 
     def player_thread(self, socket):
@@ -95,10 +76,12 @@ class Game:
 
     def Get_Vessel_In_Position(self, postion, is_enemy=False, is_ally=False, is_neutral=False, is_own=False) -> Vessel:
 
-
         if is_enemy and is_ally and is_neutral and is_own == False: return None
 
         for vessel in self.forces:
             if vessel.Is_Collision(postion):
                 return vessel
 
+    def Get_Vessel_By_Id(self, id) -> Vessel:
+        for vessel in self.forces:
+            if vessel.id == id: return vessel

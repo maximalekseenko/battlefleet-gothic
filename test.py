@@ -20,4 +20,6 @@ vessel3p2 = game.Add_Vessel(LunarClassCruiser, 1, (90, 40), 45)
 game.Start()
 
 
-print(vessel1p1.orders[0].Initiate(AAA=0))
+print(vessel1p1.position)
+game.Handle_Order(1, vessel1p1.Get_Order_By_Id(0).Get(position=(10, 20)))
+print(vessel1p1.position)

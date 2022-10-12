@@ -5,6 +5,7 @@ class Order:
     *   `TYPE`
     \n functions:
     *   `Validate`
+    *   `On_Give`
     '''
     NAME:str
     TYPE:str
@@ -21,12 +22,18 @@ class Order:
         self.id:int = id
 
 
-    def Validate(self, **kargs) -> bool: pass
+    def Is_Valid_Args(self, **kargs) -> bool: pass
+    def On_Give(self, **kargs) -> None: pass
 
 
-    def Initiate(self, **kargs) -> dict:
+    def Give(self, **kargs) -> None:
+        if not self.Is_Valid_Args(**kargs): return
+        self.On_Give(**kargs)
+
+
+    def Get(self, **kargs) -> dict:
         return {
             'vesselid': self.vessel.id,
-            'ordername': self.NAME,
+            'orderid': self.id,
             **kargs
         }
