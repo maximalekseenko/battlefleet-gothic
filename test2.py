@@ -1,37 +1,44 @@
-from backend.game.action import Action
-from backend.game.common.actions.move import Move
-from backend.game.common.actions.allaheadfull import AllAheadFull
-from backend.game.vessel import Vessel
-from backend.game.armament import Armament, ARC
+from backend.game.common.orders.move import Move
+from backend.game.common.orders.allaheadfull import AllAheadFull
+from backend.game import Vessel, VESSELTYPE, Armament, FIREARC
 
 
-class WeaponsBatteryPort(Armament):
-    COLOR = "#a0a000"
-    NAME = "Weapons Battery"
+class PortWeaponsBattery(Armament):
+    NAME = "Port-WEAPONS-BATTERY"
     RANGE = 60
     FIREPOWER = 6
-    FIREARC:ARC.LEFT
+    ARMAMENT_ORDER = None
+    FIREARC = FIREARC.PORT
 
-class WeaponsBatteryStarboard(Armament):
-    COLOR = "#a0a000"
-    NAME = "Weapons Battery"
+class StarboardWeaponsBattery(Armament):
+    NAME = "STARBOARD-WEAPONS-BATTERY"
     RANGE = 60
     FIREPOWER = 6
-    FIREARC:ARC.LEFT
+    ARMAMENT_ORDER = None
+    FIREARC = FIREARC.STARBOARD
 
-class LancePort(Armament):
-    COLOR = "#0000a0"
-    NAME = "Weapons Battery"
-    RANGE = 30
-    FIREPOWER = 6
-    FIREARC:ARC.LEFT
 
-class LanceStarboard(Armament):
-    COLOR = "#a0a000"
-    NAME = "Weapons Battery"
-    RANGE = 30
-    FIREPOWER = 6
-    FIREARC:ARC.LEFT
+class PortLanceBattrey(Armament):
+    NAME = "PORT-LANCE-BATTREY"
+    RANGE = 45
+    FIREPOWER = 2
+    ARMAMENT_ORDER = None
+    FIREARC = FIREARC.PORT
+
+class PortLanceBattrey(Armament):
+    NAME = "STARBOARD-LANCE-BATTREY"
+    RANGE = 45
+    FIREPOWER = 2
+    ARMAMENT_ORDER = None
+    FIREARC = FIREARC.PORT
+
+class Torpedos(Armament):
+    NAME = "Torpedos"
+    RANGE = 100
+    FIREPOWER = 3
+    ARMAMENT_ORDER = None
+    FIREARC = FIREARC.PROW
+
 
 
 class LunarClassCruiser(Vessel):
@@ -42,12 +49,10 @@ class LunarClassCruiser(Vessel):
     TYPE = "CRUISER"
     SPEED = 20
     TURNS = 45
-    ARMAMENTS = [WeaponsBatteryPort(), WeaponsBatteryStarboard(), LancePort(), LanceStarboard()]
+    ARMAMENTS = []
     BASE_RADIUS = 5
+    
 
 
     # actions
     ORDERS = [Move, AllAheadFull]
-    MOVEMENT_ACTIONS = [Move,Action]
-    SPECAL_ACTIONS = [Action,Action,Action,Action,Action,Action]
-    VESSEL_ACTIONS = [Action,Action,Action]

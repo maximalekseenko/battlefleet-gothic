@@ -1,119 +1,78 @@
 import math
 
-
-from .action import Action
+from .order import Order
 from .armament import Armament
 from .player import Player
-
+from .enums import VESSELTYPE
 
 
 class Vessel:
+    '''
+    \n constants:
+    
+    *   `TYPE`
+    *   `HITS`
+    *   `SPEED`
+    *   `TURNS`
 
-    TYPEESCORT = 0
-    TYPECRUISER = 1
-    TYPEBATTLESHIP = 2
+    *   `ORDERS`
+    *   `ARMAMENTS`
 
-    # actions
-    MOVEMENT_ACTIONS:list[Action]
-    SPECAL_ACTIONS:list[Action]
-    VESSEL_ACTIONS:list[Action]
-    ARMAMENT_ACTIONS:list[Action]
-    ORDERS:list[type[Action]]
-
+    *   `BASE_RADIUS`
+    '''
 
     # datasheet
-    CLASSNAME:int
+    TYPE:VESSELTYPE
     HITS:int
-    TYPE:int
+    '''starting hits'''
     SPEED:int
+    '''starting speed'''
     TURNS:int
-    ARMAMENTS:list[Armament]
-    LEADERSHIP:int
+    '''starting turns'''
+
+    # lists
+    ORDERS:list[type[Order]]
+    ARMAMENTS:list[type[Armament]]
+
     BASE_RADIUS:int
 
 
     def __init__(self, game, owner:Player, position:tuple[int,int], rotation:int, id:int) -> None:
-
+        
         from .game import Game
         self.game:Game = game
+
+        # properties
+        self._rotation:int = 0
 
         # game variables
         self.owner:Player = owner
         self.id:int = id
         self.position:tuple[int,int] = position
-        self.rotation:int = rotation
+        self.rotation = rotation
+
+        # datasheet
+        self.hits = self.HITS
+        self.speed = self.SPEED
+        self.turns = self.TURNS
+
+        # lists
+        self.orders:list[Order] = list()
+
+        order_id = 0
+        for order in self.ORDERS:
+            self.orders.append(order(self, order_id))
+            order_id += 1
 
 
-        self.orders:dict[str,Action]
+    @property
+    def rotation(self) -> int:
+        return self._rotation
+    
+    @rotation.setter
+    def rotation(self, value):
+        self._rotation = value % 360
 
-        # turn stuff
-        self.movement_actions:list[Action]
-        self.specal_actions:list[Action]
-        self.vessel_actions:list[Action]
-        self.armament_actions:list[Action]
-        self.hits_current:int
-        self.speed_current:int
-        self.turns_current:int
-
-        self.Game_Reset()
-        self.Turn_Reset()
-
-
-    def Game_Reset(self):
-
-        # hits
-        self.hits_current = self.HITS
-
-        # actions
-        self.movement_actions = [action(self) for action in self.MOVEMENT_ACTIONS]
-        self.specal_actions = [action(self) for action in self.SPECAL_ACTIONS]
-        self.vessel_actions = [action(self) for action in self.VESSEL_ACTIONS]
-        self.armament_actions = [action for action in self.ARMAMENTS]
-
-
-    def Turn_Reset(self):
-        self.orders = {order.NAME: order(self) for order in sorted(self.ORDERS, key=Action.Get_Order_Size)}
-
-        self.speed_current = self.SPEED
-        self.turns_current = self.TURNS
-
-        for armament in self.ARMAMENTS: armament.Turn_Reset()
-
-
-    def Turn(self, angle):
-
-        # is already turned
-        if self.turns_current == 0: return False
-
-        # fix angle
-        if angle > self.turns_current: 
-            angle = self.turns_current
-        elif angle < -self.turns_current: 
-            angle = -self.turns_current
-
-        # turn counter
-        self.turns_current += abs(angle)
-
-        self.rotation += angle
-
-
-    def Get_Action(self, name:str, type:str) -> Action:
-        if type == "MOVEMENT":
-            for action in self.movement_actions:
-                if action.NAME == name: return action
-        if type == "ARMAMENT":
-            for action in self.armament_actions:
-                if action.NAME == name: return action
-        if type == "SPECAL":
-            for action in self.specal_actions:
-                if action.NAME == name: return action
-        if type == "VESSEL":
-            for action in self.vessel_actions:
-                if action.NAME == name: return action
-        
-
-    def Is_Collision(self, point):
-        return math.dist(self.position, point) <= self.BASE_RADIUS
-
-
-
+    @property
+    def rad_rotation(self) -> int:
+        return math.radians(self._rotation)

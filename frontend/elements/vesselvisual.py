@@ -1,5 +1,6 @@
 from math import sin, cos, radians
 import pygame
+from backend.game.armament import ARC, Armament
 
 
 # engine
@@ -45,7 +46,7 @@ class VesselVisual(Element):
         self.tooltip_surface.blit(text_type, text_type.get_rect(topleft=(0,0)))
         self.tooltip_surface.blit(text_class, text_type.get_rect(topright=self.tooltip_surface.get_rect().topright))
 
-        # weaponry
+        # weaponry 
 
         # characteristics
         ## hits
@@ -57,7 +58,7 @@ class VesselVisual(Element):
         ## turns
         char_pos = (60,20)
         char_name = theatre.FONT12.render("TURNS", 1, self.vessel.owner.color)
-        char_value = theatre.FONT12.render(f"{self.vessel.TURNS}*", 1, self.vessel.owner.color)
+        char_value = theatre.FONT12.render(f"{self.vessel.TURNS}˚", 1, self.vessel.owner.color)
         self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
         self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
         ## shields
@@ -68,7 +69,7 @@ class VesselVisual(Element):
         self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
         ## armour
         char_pos = (20,40)
-        char_name = theatre.FONT12.render("ARMOUR", 1, self.vessel.owner.color)
+        char_name = theatre.FONT12.render("ARMOUR", 1, self.vessel.owner.color) 
         char_value = theatre.FONT12.render(f"{self.vessel.TURNS}*", 1, self.vessel.owner.color)
         self.tooltip_surface.blit(char_name, char_name.get_rect(midbottom=char_pos))
         self.tooltip_surface.blit(char_value, char_value.get_rect(midtop=char_pos))
@@ -103,8 +104,8 @@ class VesselVisual(Element):
     def On_Render(self, target:pygame.Surface):
 
         # highlight and select
-        if self.vessel == self.scene.act.actionsmenu.selected_vessel: self._Blit_Highlight(target, theatre.settings["player_color"])
-        elif self.is_highlighted: self._Blit_Highlight(target, theatre.settings["neutral_color"])
+        if self.vessel == self.scene.act.actionsmenu.selected_vessel: self.Render_Highlight(target, theatre.settings["player_color"])
+        elif self.is_highlighted: self.Render_Highlight(target, theatre.settings["neutral_color"])
 
         # tooltip
         
@@ -116,36 +117,48 @@ class VesselVisual(Element):
 
     def Render_Tooltip(self, target:pygame.Surface):
         if self.tooltip_time < 100: return
-
-        pygame.draw.line(target, theatre.settings["neutral_color"],
-        (self.rect.center), (0, self.rect.centery))
         
         target.blit(self.tooltip_surface, self.rect.center)
 
 
-    def _Blit_Arcs(self, target:pygame.Surface, color, radius:int, left=True, front=True, right=True, back=True):
-        arcs_surface = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
+    def Render_Highlight(self, target, color):
+
+        for armament in self.vessel.ARMAMENTS:
+            self.Render_Armament_Arcs(target, armament)
+
+        pygame.draw.circle(target, color, self.rect.center, self.vessel.BASE_RADIUS, 1)
+        pygame.draw.line(target, color,
+            (self.rect.centerx + self.vessel.BASE_RADIUS * cos(radians(self.vessel.rotation + 45)), 
+             self.rect.centery + self.vessel.BASE_RADIUS  * sin(radians(self.vessel.rotation + 45))),
+            (self.rect.centerx + 60 * cos(radians(self.vessel.rotation + 45)), 
+             self.rect.centery + 60 * sin(radians(self.vessel.rotation + 45))))
+        pygame.draw.line(target, color,
+            (self.rect.centerx + self.vessel.BASE_RADIUS * cos(radians(self.vessel.rotation - 45)), 
+             self.rect.centery + self.vessel.BASE_RADIUS  * sin(radians(self.vessel.rotation - 45))),
+            (self.rect.centerx + 60 * cos(radians(self.vessel.rotation - 45)), 
+             self.rect.centery + 60 * sin(radians(self.vessel.rotation - 45))))
+        pygame.draw.line(target, color,
+            (self.rect.centerx + self.vessel.BASE_RADIUS * cos(radians(self.vessel.rotation + 135)), 
+             self.rect.centery + self.vessel.BASE_RADIUS  * sin(radians(self.vessel.rotation + 135))),
+            (self.rect.centerx + 60 * cos(radians(self.vessel.rotation + 135)), 
+             self.rect.centery + 60 * sin(radians(self.vessel.rotation + 135))))
+        pygame.draw.line(target, color,
+            (self.rect.centerx + self.vessel.BASE_RADIUS * cos(radians(self.vessel.rotation - 135)), 
+             self.rect.centery + self.vessel.BASE_RADIUS  * sin(radians(self.vessel.rotation - 135))),
+            (self.rect.centerx + 60 * cos(radians(self.vessel.rotation - 135)), 
+             self.rect.centery + 60 * sin(radians(self.vessel.rotation - 135))))
+
+
+    def Render_Armament_Arcs(self, target:pygame.Surface, armament:Armament):
+        arcs_surface = pygame.Surface((armament.RANGE * 2, armament.RANGE * 2), pygame.SRCALPHA)
+
         arcs_surface_rect = arcs_surface.get_rect()
-        pygame.draw.circle(arcs_surface, color, arcs_surface_rect.center, radius, 
-            draw_top_right = front, draw_top_left = left, draw_bottom_left = back, draw_bottom_right = right)
-        
-        # # lines
-        # ## up
-        # if left or front: pygame.draw.line(arcs_surface, theatre.settings["neutral_color"],
-        #     (arcs_surface_rect.centerx, self.vessel.BASE_RADIUS),
-        #     (arcs_surface_rect.centerx, arcs_surface_rect.centery + radius))
-        # ## left
-        # if front or right: pygame.draw.line(arcs_surface, theatre.settings["neutral_color"],
-        #     (self.vessel.BASE_RADIUS, arcs_surface_rect.centery),
-        #     (arcs_surface_rect.centerx + radius, arcs_surface_rect.centery))
-        # ## down
-        # if right or back: pygame.draw.line(arcs_surface, theatre.settings["neutral_color"],
-        #     (arcs_surface_rect.centerx, -self.vessel.BASE_RADIUS),
-        #     (arcs_surface_rect.centerx, -arcs_surface_rect.centery - radius))
-        # ## right
-        # if front or right: pygame.draw.line(arcs_surface, theatre.settings["neutral_color"],
-        #     (-self.vessel.BASE_RADIUS, arcs_surface_rect.centery),
-        #     (-arcs_surface_rect.centerx - radius, arcs_surface_rect.centery))
+        pygame.draw.circle(arcs_surface, armament.COLOR + "50", arcs_surface_rect.center, armament.RANGE, 
+            draw_top_right = armament.FIREARC == ARC.PROW, 
+            draw_top_left = armament.FIREARC == ARC.PORT, 
+            draw_bottom_left = armament.FIREARC == False,
+            draw_bottom_right = armament.FIREARC == ARC.STARBOARD)
+
 
         arcs_surface = pygame.transform.rotate(arcs_surface, 45 + self.vessel.rotation)
 

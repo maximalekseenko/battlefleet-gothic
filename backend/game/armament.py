@@ -1,30 +1,36 @@
-from enum import Enum
+from backend.game.order import Order
 
-
-
-class ARC(Enum):
-    LEFT = 0
-    FRONT = 1
-    RIGHT = 2
-    LEFTFRONTRIGHT = 3
-
+from backend.game import FIREARC
 
 
 class Armament:
+    """
+    \n constants:
+    *   `NAME`
+    *   `RANGE`
+    *   `FIREPOWER`
+    *   `FIREARC`
+
+    *   `ARMAMENT_ORDER`
+    """
 
     COLOR:str
 
     NAME:str
     RANGE:int
     FIREPOWER:int
-    FIREARC:ARC
-
-    def __init__(self) -> None:
-        pass
-
-        # turn stuff
-        self.turn_is_used:bool
+    FIREARC:FIREARC
+    
+    ARMAMENT_ORDER:Order
 
 
-    def Turn_Reset(self):
-        self.turn_is_used = False
+    def __init__(self, vessel, firearc=None) -> None:
+
+        from .vessel import Vessel
+        self.vessel:Vessel = vessel
+
+        from .game import Game
+        self.game:Game = vessel.game
+
+        if firearc != None:
+            self.FIREARC = firearc

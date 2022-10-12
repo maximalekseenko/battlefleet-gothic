@@ -1,9 +1,7 @@
-from cmath import pi, rect, sqrt
-from math import atan2, degrees, hypot, radians, sin, cos
-import backend.game as game
+from backend.game import Order
 
 
-class AllAheadFull(game.Action):
+class AllAheadFull(Order):
     NAME = "ALLAHEADFULL"
     TYPE = "SPECAL"
     DISPLAY_NAME = "ALL AHEAD FULL"

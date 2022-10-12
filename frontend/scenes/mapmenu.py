@@ -1,5 +1,5 @@
 import pygame
-from backend.game import action
+from backend.game import order
 
 # engine
 from engine import Scene
@@ -83,6 +83,7 @@ class MapMenu(Scene):
             ))
 
         # vessels
+        ## highlight
         for vessel_visual in self.vessel_visuals:
             vessel_visual.Render(self.surface)
 
