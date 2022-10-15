@@ -20,6 +20,8 @@ class Vessel:
 
     *   `BASE_RADIUS`
     '''
+    # game
+    MOVEMENT_CHECKS:list = list()
 
     # datasheet
     TYPE:VESSELTYPE

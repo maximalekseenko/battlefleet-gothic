@@ -6,7 +6,7 @@ game = Game()
 
 # player 1
 game.Join(1)
-vessel1p1 = game.Add_Vessel(LunarClassCruiser, 0, (10, 20 ), 0)
+vessel1p1 = game.Add_Vessel(LunarClassCruiser, 0, (10, 20 ), -45)
 vessel2p1 = game.Add_Vessel(LunarClassCruiser, 0, (10, 30 ), 0)
 vessel3p1 = game.Add_Vessel(LunarClassCruiser, 0, (10, 40 ), 0)
 
@@ -21,5 +21,5 @@ game.Start()
 
 
 print(vessel1p1.position)
-game.Handle_Order(1, vessel1p1.Get_Order_By_Id(0).Get(target=(20, 20)))
+game.Handle_Order(1, vessel1p1.Get_Order_By_Id(0).Get(target=(20, 30)))
 print(vessel1p1.position)

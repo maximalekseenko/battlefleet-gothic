@@ -1,4 +1,4 @@
-from math import atan2, cos, degrees, sin
+from math import atan2, cos, degrees, hypot, sin
 
 from backend.game import Order
 
@@ -7,6 +7,15 @@ class Move(Order):
     TYPE = "MOVEMENT"
 
 
+    def Do(self, target:tuple[int, int]=None) -> None:
+        target = self.Fix_Target(target)
+
+        # check if target valid
+        if target == None: return
+
+        self.vessel.position = target
+
+        
     def Fix_Target(self, target:tuple[int, int]=None) -> any:
         if target == None: return
 
@@ -14,57 +23,39 @@ class Move(Order):
         delta_Y = target[1] - self.vessel.position[1]
 
         # direction check
-        if (self.vessel.rotation - degrees(atan2(delta_Y, delta_X))) % 360 > 90: return None
+        if abs(self.vessel.rotation - degrees(atan2(delta_Y, delta_X))) > 90: 
+            return self.vessel.position
 
         # get distance
         sinner = sin(self.vessel.rad_rotation)
         cosinner = -cos(self.vessel.rad_rotation)
-        distance = (cosinner * delta_X + sinner * delta_Y)
+        distance = abs(cosinner * delta_X + sinner * delta_Y)
+
+        # cut distance
+        if distance > self.vessel.speed: distance = self.vessel.speed
 
         # fix distance
-        # TODO
-        # if distance > self.vessel.move
+        target = self._Step(self.vessel.position, distance)
 
-        target = (
-            self.game.Round(self.vessel.position[0] + distance * cosinner),
-            self.game.Round(self.vessel.position[1] + distance * sinner))
+        return (self.game.Round(target[0]), self.game.Round(target[1]))
 
 
-        return target
+    def _Step(self, position:tuple[int, int], distance:int):
+        print('S',position, distance)
+        step_acc = 0.5
 
+        # get step
+        step = (
+            + cos(self.vessel.rad_rotation) * step_acc,
+            - sin(self.vessel.rad_rotation) * step_acc)
 
-    def Do(self, target:tuple[int, int]=None) -> None:
-        target = self.Fix_Target(target)
-
-        # check if target valid
-        if target == None: return
-
-        self._Step(target)
-
-
-    def _Step(self, target:tuple[int, int]=None):
-
-        # get new position
-        new_x = self.vessel.position[0] + cos(self.vessel.rad_rotation)
-        new_y = self.vessel.position[1] - sin(self.vessel.rad_rotation)
-
-        delta_X = target[0] - new_x
-        delta_Y = target[1] - new_y
+        # close
+        distance -= hypot(*step)
+        # TODO: checks (blas markers ect.)
 
         # if finished movement
-        # print(self.vessel.rotation, cos(self.vessel.rad_rotation), sin(self.vessel.rad_rotation))
-        # print(delta_X, delta_Y, degrees(atan2(delta_Y, delta_X)))
-        print("A",new_x, new_y)
-        if (self.vessel.rotation - degrees(atan2(delta_Y, delta_X))) % 360 > 90:
-            self.vessel.position = target
-            return
-        else: 
-            self.vessel.position = (new_x, new_y)
-            self._Test()
-
-        self._Step(target)
-
-    
-    def _Test():
-        pass
+        if distance <= 0: return (position[0] + step[0], position[1] + step[1])
+        
+        # continue
+        else: return self._Step((position[0] + step[0], position[1] + step[1]), distance)
 
