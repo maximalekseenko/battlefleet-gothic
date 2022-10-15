@@ -8,6 +8,7 @@ class Game:
     def __init__(self, **preferences) -> None:
         self.players = list()
         self.size = (90, 60)
+        self.accuracy = 5
 
         self.vessel_id_last:int = -1
         self.forces:list[game.Vessel] = list()
@@ -58,16 +59,20 @@ class Game:
         if not order_data: return
 
         # get vessel
-        vessel = self.Get_Vessel_By_Id(order_data["vesselid"])
+        vessel = self.Get_Vessel_By_Id(order_data['vesselid'])
         if vessel.owner.socket != socket: return
 
         # get order
-        order = vessel.Get_Order_By_Id(order_data["orderid"])
-        order.Give(**order_data)
+        order = vessel.Get_Order_By_Id(order_data['orderid'])
+        order.Do(order_data['target'])
 
 
     def player_thread(self, socket):
         pass
+
+
+    def Round(self, value) -> any:
+        return round(value, self.accuracy)
 
 
     def Get_Player_Color(self):

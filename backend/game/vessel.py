@@ -75,7 +75,7 @@ class Vessel:
 
     @property
     def rad_rotation(self) -> int:
-        return math.radians(self._rotation)
+        return math.radians(self.rotation)
 
 
     def Get_Order_By_Id(self, id) -> Order:

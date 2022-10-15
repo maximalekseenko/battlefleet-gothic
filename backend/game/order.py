@@ -22,18 +22,13 @@ class Order:
         self.id:int = id
 
 
-    def Is_Valid_Args(self, **kargs) -> bool: pass
-    def On_Give(self, **kargs) -> None: pass
+    def Fix_Target(self, target=None) -> any: pass
+    def Do(self, **kargs) -> None: pass
 
 
-    def Give(self, **kargs) -> None:
-        if not self.Is_Valid_Args(**kargs): return
-        self.On_Give(**kargs)
-
-
-    def Get(self, **kargs) -> dict:
+    def Get(self, target) -> dict:
         return {
             'vesselid': self.vessel.id,
             'orderid': self.id,
-            **kargs
+            'target': target
         }
