@@ -1,5 +1,5 @@
 import pygame
-from backend.game import Action
+from backend.game import Order
 
 
 # engine
@@ -14,7 +14,7 @@ from frontend.elements import Clickable
 
 
 class OrdersHolder(Element):
-    def __init__(self, scene, orders:list[Action]) -> None:
+    def __init__(self, scene, orders:list[Order]) -> None:
         super().__init__(scene)
 
         # for snippets

@@ -3,8 +3,8 @@ import pygame
 # engine
 from engine import Scene, Element
 from backend.theatre import theatre
-from backend.game import Vessel, Action
-from backend.game.common.actions.selectvessel import SelectVessel
+from backend.game import Vessel, Order
+from backend.game.common.orders.selectvessel import SelectVessel
 
 
 
@@ -25,7 +25,7 @@ class ActionsMenu(Scene):
         
         # private variables
         self._selected_vessel:Vessel = None
-        self._selected_action:Action = SelectVessel(self)
+        self._selected_action:Order = SelectVessel(self)
 
 
     @property
@@ -44,12 +44,12 @@ class ActionsMenu(Scene):
 
 
     @property
-    def selected_action(self) -> Action:
+    def selected_action(self) -> Order:
         return self._selected_action
 
 
     @selected_action.setter
-    def selected_action(self, value:Action|None) -> None:
+    def selected_action(self, value:Order|None) -> None:
 
         # if None
         if value == None: self._selected_action = SelectVessel(self)
@@ -73,11 +73,11 @@ class ActionsMenu(Scene):
             self.noselection.blit(text_b, text_b.get_rect(centerx=self.noselection.get_rect().centerx, y=text_a.get_height()))
         else:
             self.elements.clear()
-            orders_by_type:dict[str,list[Action]] = dict()
+            orders_by_type:dict[str,list[Order]] = dict()
             top = self.rect.top
 
             # pass orders in orders_by_type
-            for order in self.selected_vessel.orders.values():
+            for order in self.selected_vessel.orders:
                 if order.TYPE not in orders_by_type: orders_by_type[order.TYPE] = list()
                 orders_by_type[order.TYPE].append(order)
 

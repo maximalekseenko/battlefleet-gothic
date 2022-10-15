@@ -3,7 +3,7 @@ from math import atan2, degrees, hypot, radians, sin, cos
 import backend.game as game
 
 
-class SelectVessel(game.Action):
+class SelectVessel(game.Order):
     NAME = "SELECTVESSEL"
     TYPE = ""
 
