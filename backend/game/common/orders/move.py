@@ -6,25 +6,29 @@ class Move(Order):
     NAME = "MOVE"
     TYPE = "MOVEMENT"
 
+
     def Fix_Target(self, target:tuple[int, int]=None) -> any:
         if target == None: return
 
-        delta_X = self.vessel.position[0] - target[0]
-        delta_Y = self.vessel.position[1] - target[1]
+        delta_X = target[0] - self.vessel.position[0]
+        delta_Y = target[1] - self.vessel.position[1]
 
-        # direction fix
-        # print(degrees(atan2(delta_X, delta_Y)))
+        # direction check
+        if (self.vessel.rotation - degrees(atan2(delta_Y, delta_X))) % 360 > 90: return None
 
-        # position fix
+        # get distance
         sinner = sin(self.vessel.rad_rotation)
-        cosinner = cos(self.vessel.rad_rotation)
-        a = (sinner * -delta_X + cosinner * -delta_Y)
+        cosinner = -cos(self.vessel.rad_rotation)
+        distance = (cosinner * delta_X + sinner * delta_Y)
 
-        # round fix
+        # fix distance
+        # TODO
+        # if distance > self.vessel.move
+
         target = (
-            self.game.Round(self.vessel.position[0] + a * sinner),
-            self.game.Round(self.vessel.position[1] + a * cosinner)
-        )
+            self.game.Round(self.vessel.position[0] + distance * cosinner),
+            self.game.Round(self.vessel.position[1] + distance * sinner))
+
 
         return target
 
@@ -41,14 +45,26 @@ class Move(Order):
     def _Step(self, target:tuple[int, int]=None):
 
         # get new position
-        new_x = self.vessel.position[0] - sin(self.vessel.rad_rotation)
-        new_y = self.vessel.position[1] + cos(self.vessel.rad_rotation)
+        new_x = self.vessel.position[0] + cos(self.vessel.rad_rotation)
+        new_y = self.vessel.position[1] - sin(self.vessel.rad_rotation)
+
+        delta_X = target[0] - new_x
+        delta_Y = target[1] - new_y
 
         # if finished movement
-        if abs(new_x - target[0]) < 1 or abs(new_y - target[1]) < 1:
+        # print(self.vessel.rotation, cos(self.vessel.rad_rotation), sin(self.vessel.rad_rotation))
+        # print(delta_X, delta_Y, degrees(atan2(delta_Y, delta_X)))
+        print("A",new_x, new_y)
+        if (self.vessel.rotation - degrees(atan2(delta_Y, delta_X))) % 360 > 90:
             self.vessel.position = target
+            return
         else: 
             self.vessel.position = (new_x, new_y)
+            self._Test()
 
         self._Step(target)
+
+    
+    def _Test():
+        pass
 
