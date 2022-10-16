@@ -1,4 +1,5 @@
 from backend.game.common.orders.move import Move
+from backend.game.common.orders.rotate import Rotate
 from backend.game.common.orders.allaheadfull import AllAheadFull
 from backend.game import Vessel, VESSELTYPE, Armament, FIREARC
 
@@ -55,4 +56,4 @@ class LunarClassCruiser(Vessel):
 
 
     # actions
-    ORDERS = [Move, AllAheadFull]
+    ORDERS = [Move, Rotate, AllAheadFull]

@@ -3,7 +3,7 @@ from math import atan2, cos, degrees, hypot, sin
 from backend.game import Order
 
 class Move(Order):
-    NAME = "MOVE"
+    NAME = "Move"
     TYPE = "MOVEMENT"
 
 

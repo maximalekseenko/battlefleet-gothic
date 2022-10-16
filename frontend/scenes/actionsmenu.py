@@ -5,6 +5,7 @@ from engine import Scene, Element
 from backend.theatre import theatre
 from backend.game import Vessel, Order
 from backend.game.common.orders.selectvessel import SelectVessel
+from frontend.elements import OrderButton
 
 
 
@@ -22,6 +23,7 @@ class ActionsMenu(Scene):
 
         # variables
         self.scrolled_value = 0
+        self.content_height = 0
         
         # private variables
         self._selected_vessel:Vessel = None
@@ -38,6 +40,14 @@ class ActionsMenu(Scene):
 
         # if None
         if type(value) == None: self._selected_vessel == None
+
+        # if same
+        if value == self._selected_vessel: return
+
+        # get orders
+        self.elements.clear()
+        for order in value.orders:
+            self.elements.append(OrderButton(self, order))
 
         # if vessel
         else: self._selected_vessel = value
@@ -72,37 +82,15 @@ class ActionsMenu(Scene):
             self.noselection.blit(text_a, text_a.get_rect(centerx=self.noselection.get_rect().centerx, y=0))
             self.noselection.blit(text_b, text_b.get_rect(centerx=self.noselection.get_rect().centerx, y=text_a.get_height()))
         else:
-            self.elements.clear()
-            orders_by_type:dict[str,list[Order]] = dict()
-            top = self.rect.top
+            content_top = self.rect.top + self.scrolled_value
+            self.content_height = 0
 
-            # pass orders in orders_by_type
-            for order in self.selected_vessel.orders:
-                if order.TYPE not in orders_by_type: orders_by_type[order.TYPE] = list()
-                orders_by_type[order.TYPE].append(order)
-
-            # add orders from orders_by_type to self elements
-            from frontend.elements import Separatior, OrdersHolder
-            for type, orders in orders_by_type.items():
-
-                # add separator
-                new_element = Separatior(self, type)
-                new_element.rect.top = top
-                top += new_element.rect.height
-                self.elements.append(new_element)
-
-                # # add orders holder
-                # new_element = OrdersHolder(self, orders)
-                # new_element.rect.top = top
-                # top += new_element.rect.height
-                # self.elements.append(new_element)
-
-            # element heights
-            height = 0
-            for element in self.elements: 
-                element.rect.top = height + self.scrolled_value
-                element.Update()
-                height += element.rect.height
+            for orderbutton in self.elements:
+                orderbutton.Update()
+                orderbutton.rect.top = self.content_height + content_top
+                self.content_height += orderbutton.rect.height + 1
+            
+        
 
 
     def On_Open(self) -> None:
@@ -129,9 +117,14 @@ class ActionsMenu(Scene):
 
     def On_Render(self) -> None:
 
-        # render background and outline
+        # render background
         self.surface.fill(theatre.settings['background_color'])
-        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 2)
+
+        # render outline
+        pygame.draw.rect(self.surface, theatre.settings['neutral_color'], (
+            (0, self.scrolled_value), 
+            (self.rect.width, max(self.content_height, self.rect.height)))
+            , 2)
 
         # render elements
         ## vessel not selected
@@ -143,3 +136,25 @@ class ActionsMenu(Scene):
 
         # render on screen
         self.act.surface.blit(self.surface, (0,0))
+
+    def _Render_Orders(self):
+        if self.selected_vessel == None: return
+
+        height = self.scrolled_value
+        for order in self.selected_vessel.orders:
+
+            # if not visible
+            if order.Is_Invisible(): continue
+
+            # surface
+            order_surface = pygame.Surface((self.rect.width - 20, 25))
+            order_surface.fill(self.selected_vessel.owner.color)
+
+            # name
+            order_name = theatre.FONT12.render(order.NAME, 2, "#000000")
+            order_surface.blit(order_name, order_name.get_rect(midleft=(0,12.5)))
+
+            # final
+            self.surface.blit(order_surface, order_surface.get_rect(centerx=self.rect.centerx, top=height))
+            height += 26
+

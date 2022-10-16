@@ -6,6 +6,9 @@ class Order:
     \n functions:
     *   `Validate`
     *   `On_Give`
+    *   `Is_Visible`
+    *   `Is_Enabled`
+    *   `Is_Warn`
     '''
     NAME:str
     TYPE:str
@@ -22,6 +25,9 @@ class Order:
         self.id:int = id
 
 
+    def Is_Invisible(self) -> bool: return False
+    def Is_Disabled(self) -> bool: return False
+    def Is_Warn(self) -> bool: return False
     def Fix_Target(self, target=None) -> any: pass
     def Do(self, **kargs) -> None: pass
 
