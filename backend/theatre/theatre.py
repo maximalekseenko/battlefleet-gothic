@@ -14,6 +14,8 @@ class Theatre(Theatre):
         self.FONT60 = pygame.font.Font(None, 60)
         self.FONT24 = pygame.font.Font(None, 24)
         self.FONT12 = pygame.font.Font(None, 12)
+        self.FONT15 = pygame.font.Font(None, 15)
+        self.FONT20 = pygame.font.Font(None, 20)
         self.FONT6 = pygame.font.Font(None, 6)
         self.BUTTON_SIZE = (300, 25)
         self.BUTTON_FONT = pygame.font.Font(None, 24)
