@@ -82,8 +82,17 @@ class MapMenu(Scene):
             (self.act.game.size[0] * self.scaled_value, self.act.game.size[1] * self.scaled_value)
             ))
 
+        # order
+        if self.act.actionsmenu.selected_action != None and self.act.actionsmenu.selected_vessel != None:
+            # print(self.Convert_To_Surface(self.act.actionsmenu.selected_vessel.position), 
+            #     self.Convert_To_Surface(self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))),
+            #     self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos())),
+            #     self.Convert_To_Map(pygame.mouse.get_pos()))
+            pygame.draw.line(self.surface, "#a05000", 
+                self.Convert_To_Surface(self.act.actionsmenu.selected_vessel.position), 
+                self.Convert_To_Surface(self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))))
+
         # vessels
-        ## highlight
         for vessel_visual in self.vessel_visuals:
             vessel_visual.Render(self.surface)
 

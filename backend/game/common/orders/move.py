@@ -19,11 +19,11 @@ class Move(Order):
     def Fix_Target(self, target:tuple[int, int]=None) -> any:
         if target == None: return
 
-        delta_X = target[0] - self.vessel.position[0]
-        delta_Y = target[1] - self.vessel.position[1]
+        delta_X = self.vessel.position[0] - target[0]
+        delta_Y = self.vessel.position[1] - target[1]
 
         # direction check
-        if abs(self.vessel.rotation - degrees(atan2(delta_Y, delta_X))) > 90: 
+        if 90 < (self.vessel.rotation - degrees(atan2(delta_Y, -delta_X)) % 360) % 360 < 270: 
             return self.vessel.position
 
         # get distance
@@ -41,7 +41,6 @@ class Move(Order):
 
 
     def _Step(self, position:tuple[int, int], distance:int):
-        print('S',position, distance)
         step_acc = 0.5
 
         # get step

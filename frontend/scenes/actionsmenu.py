@@ -91,11 +91,11 @@ class ActionsMenu(Scene):
                 top += new_element.rect.height
                 self.elements.append(new_element)
 
-                # add orders holder
-                new_element = OrdersHolder(self, orders)
-                new_element.rect.top = top
-                top += new_element.rect.height
-                self.elements.append(new_element)
+                # # add orders holder
+                # new_element = OrdersHolder(self, orders)
+                # new_element.rect.top = top
+                # top += new_element.rect.height
+                # self.elements.append(new_element)
 
             # element heights
             height = 0

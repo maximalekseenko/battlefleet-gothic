@@ -34,18 +34,19 @@ class GameAct(Act):
         # TODO: DELETE
         from test2 import LunarClassCruiser
         p1 = self.game.Join(1)
-        vessel1p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 20 ), -90)
-        vessel2p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 30 ), -90)
-        vessel3p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 40 ), -90)
+        vessel1p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 20 ), -10)
+        vessel2p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 30 ), 0)
+        vessel3p1 = self.game.Add_Vessel(LunarClassCruiser, p1, (10, 40 ), 30)
 
         p2 = self.game.Join(2)
-        vessel1p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (90, 20), 90)
-        vessel2p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (90, 30), 90)
-        vessel3p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (90, 40), 45)
+        vessel1p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (80, 20), 180+45)
+        vessel2p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (80, 30), 180+10)
+        vessel3p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (80, 40), 180)
 
         self.game.Start()
 
         self.actionsmenu.selected_vessel = vessel1p1
+        self.actionsmenu.selected_action = vessel1p1.orders[0]
 
 
     def On_Tick(self) -> None:
