@@ -1,10 +1,9 @@
 import pygame
-from backend.game import order
+from backend.game import Vessel
 
 # engine
 from engine import Scene
 from backend.theatre import theatre
-from frontend.elements.vesselvisual import VesselVisual
 
 
 
@@ -16,24 +15,11 @@ class MapMenu(Scene):
         from frontend.acts import GameAct
         self.act:GameAct
 
-        self.vessel_visuals:list[VesselVisual] = list()
-
         self.scrolled_point:list[int] = [0, 0]
         self.scaled_value:int = 2
 
 
     # ----------ON_STUFF----------
-
-    def On_Tick(self) -> None:
-        for vessel_visual in self.vessel_visuals:
-            vessel_visual.Tick()
-
-
-    def On_Update(self):
-        self.vessel_visuals.clear()
-
-        for vessel in self.act.game.forces:
-            self.vessel_visuals.append(VesselVisual(self, vessel))
 
 
     def On_Open(self) -> None:
@@ -61,11 +47,6 @@ class MapMenu(Scene):
             elif event.key == pygame.K_w: self.scrolled_point[1] += 1
             elif event.key == pygame.K_s: self.scrolled_point[1] -= 1
             else: return
-
-            for vessel_visual in self.vessel_visuals: vessel_visual.Update()
-
-        for vessel_visual in self.vessel_visuals:
-            vessel_visual.Handle(event)
         
 
 
@@ -84,17 +65,14 @@ class MapMenu(Scene):
 
         # order
         if self.act.actionsmenu.selected_action != None and self.act.actionsmenu.selected_vessel != None:
-            # print(self.Convert_To_Surface(self.act.actionsmenu.selected_vessel.position), 
-            #     self.Convert_To_Surface(self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))),
-            #     self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos())),
-            #     self.Convert_To_Map(pygame.mouse.get_pos()))
             pygame.draw.line(self.surface, "#a05000", 
                 self.Convert_To_Surface(self.act.actionsmenu.selected_vessel.position), 
                 self.Convert_To_Surface(self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))))
 
         # vessels
-        for vessel_visual in self.vessel_visuals:
-            vessel_visual.Render(self.surface)
+        for vessel in self.act.game.forces:
+            self._Render_Vessel(vessel)
+
 
         # selected order
         # if self.act.actionsmenu.selected_action != None:
@@ -120,3 +98,10 @@ class MapMenu(Scene):
             point[0] * self.scaled_value + self.scrolled_point[0],
             point[1] * self.scaled_value + self.scrolled_point[1]
         ]
+
+    def _Render_Vessel(self, vessel:Vessel):
+        vessel_surface = pygame.Surface((10, 5), pygame.SRCALPHA)
+        pygame.draw.polygon(vessel_surface, vessel.owner.color, ((0,0), (9,2), (0,4)))
+        vessel_surface = pygame.transform.rotate(vessel_surface, vessel.rotation)
+        
+        self.surface.blit(vessel_surface, vessel_surface.get_rect(center=self.Convert_To_Surface(vessel.position)))
