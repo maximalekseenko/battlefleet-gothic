@@ -1,20 +1,11 @@
 class COLOR:
     class UI:
-        TEXT = "#050505"
-        OUTLINE = "#101010"
-
-    BACKGROUND = "#323232"
-    UI_TEXT = "#050505"
-    UI_BACKGROUND = "#323296"
-    UI_HIGHLIGHT = "#329696"
-    UI_SELECT = "#963296"
-    UI_DISABLE = "#969696"
-    UI_WARN = "#963232"
-    GOOD = "#"
-    BAD = "#"
-    NEUTRAL = "#"
+        TEXT        = "#080808"
+        OUTLINE     = "#181818"
+        BACKGROUND  = "#101010"
 
 
+    # Playercolors
     GRAYl2      = "#e0e0e0"
     GRAYl1      = "#c0c0c0"
     GRAY        = "#a0a0a0"
