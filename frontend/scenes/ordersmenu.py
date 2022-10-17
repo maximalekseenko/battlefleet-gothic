@@ -2,7 +2,7 @@ import pygame
 
 # engine
 from engine import Scene, Element
-from backend.theatre import theatre
+from frontend.theatre import theatre
 from backend.game import Vessel, Order
 from backend.game.common.orders.selectvessel import SelectVessel
 from frontend.elements import OrderButton

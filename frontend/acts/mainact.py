@@ -2,7 +2,7 @@ import pygame
 
 # engine
 from engine import Act
-from backend.theatre import theatre
+from frontend.theatre import theatre
 
 
 
