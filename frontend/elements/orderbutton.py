@@ -25,10 +25,10 @@ class OrderButton(Element):
     def On_Update(self):
 
         HEIGHT = 20
-        WIDTH_DISTANCE = 20
+        SIDE_DISTANCE = 10
 
         # rect
-        width = max(0, self.scene.rect.width - WIDTH_DISTANCE)
+        width = max(0, self.scene.rect.width - 2*SIDE_DISTANCE)
         self.rect = pygame.Rect(0, 0, width, HEIGHT)
         self.rect.centerx = self.scene.rect.centerx
 
@@ -100,7 +100,7 @@ class OrderButton(Element):
 
             LENGTH = 10
             WIDTH = 3
-            
+
             # ┏ ┐
             # ┗ ┘
             pygame.draw.line(target, theatre.COLOR.UI.OUTLINE,
