@@ -17,11 +17,11 @@ class Game:
         self.player_colors:list[pygame.Color] = [
             "GRAY",
             "RED",
-            # "GREEN",
-            # "BLUE",
-            # "MAGENTA",
-            # "YELLOW",
-            # "CYAN",
+            "GREEN",
+            "BLUE",
+            "MAGENTA",
+            "YELLOW",
+            "CYAN",
             ]
         shuffle(self.player_colors)
 
