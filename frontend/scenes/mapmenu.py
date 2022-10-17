@@ -34,11 +34,11 @@ class MapMenu(Scene):
 
                 # position order
                 if event.button == 1: 
-                    self.act.actionsmenu.Position_Action(self.Convert_To_Map(event.pos))
+                    self.act.ordersmenu.Position_Action(self.Convert_To_Map(event.pos))
 
                 # cancel order selection
                 elif event.button == 3:
-                    self.act.actionsmenu.selected_action = None
+                    self.act.ordersmenu.selected_order = None
 
         # move
         elif event.type == pygame.KEYDOWN:
@@ -70,25 +70,15 @@ class MapMenu(Scene):
             ))
 
         # order
-        if self.act.actionsmenu.selected_action != None and self.act.actionsmenu.selected_vessel != None:
-            target = self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))
+        if self.act.ordersmenu.selected_order != None and self.act.ordersmenu.selected_vessel != None:
+            target = self.act.ordersmenu.selected_order.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))
             if target: pygame.draw.line(self.surface, "#a05000", 
-                self.Convert_To_Surface(self.act.actionsmenu.selected_vessel.position), 
+                self.Convert_To_Surface(self.act.ordersmenu.selected_vessel.position), 
                 self.Convert_To_Surface(target))
 
         # vessels
         for vessel in self.act.game.forces:
             self._Render_Vessel(vessel)
-
-
-        # selected order
-        # if self.act.actionsmenu.selected_action != None:
-        #     mouse_position = pygame.mouse.get_pos()
-        #     mouse_position = (mouse_position[0]/2, mouse_position[1]/2)
-        #     target_screen_position = self.act.actionsmenu.selected_vessel.movement_actions[0].Fix_Args(self.act.game, mouse_position)['position']
-        #     target_screen_position = (target_screen_position[0] * 2, target_screen_position[1] * 2)
-        #     # action
-        #     pygame.draw.line(self.surface, "#ff0000", (self.act.actionsmenu.selected_vessel.position[0] * 2, self.act.actionsmenu.selected_vessel.position[1] * 2), target_screen_position)
 
         # finish
         self.act.surface.blit(self.surface, self.rect)

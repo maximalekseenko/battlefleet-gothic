@@ -24,9 +24,9 @@ class GameAct(Act):
         self.game:Game = Game()
 
         # scenes
-        from frontend.scenes import ConnectionMenu, ActionsMenu, MapMenu, VessellistMenu
+        from frontend.scenes import ConnectionMenu, OrdersMenu, MapMenu, VessellistMenu
         self.connectionmenu:ConnectionMenu = ConnectionMenu(self, self.surface)
-        self.actionsmenu:ActionsMenu = ActionsMenu(self)
+        self.ordersmenu:OrdersMenu = OrdersMenu(self)
         self.mapmenu:MapMenu = MapMenu(self)
         self.vessellistmenu:VessellistMenu = VessellistMenu(self, self.vessellistsurface)
 
@@ -45,12 +45,12 @@ class GameAct(Act):
 
         self.game.Start()
 
-        self.actionsmenu.selected_vessel = vessel1p1
-        self.actionsmenu.selected_action = vessel1p1.orders[0]
+        self.ordersmenu.selected_vessel = vessel1p1
+        self.ordersmenu.selected_order = vessel1p1.orders[0]
 
 
     def On_Tick(self) -> None:
-        self.actionsmenu.Tick()
+        self.ordersmenu.Tick()
         self.mapmenu.Tick()
 
     
@@ -61,13 +61,13 @@ class GameAct(Act):
 
         # update menus
         self.connectionmenu.Update()
-        self.actionsmenu.Update()
+        self.ordersmenu.Update()
 
 
     def _Update_Menu_Rects(self):
 
-        # actions menu
-        self.actionsmenu.rect = pygame.Rect(
+        # orders menu
+        self.ordersmenu.rect = pygame.Rect(
             0,
             0,
             self.surface.get_width() * 1/4,
@@ -75,7 +75,7 @@ class GameAct(Act):
 
         # map menu
         self.mapmenu.rect = pygame.Rect(
-            self.actionsmenu.rect.right,
+            self.ordersmenu.rect.right,
             0,
             self.surface.get_width() * 2/4,
             self.surface.get_height())
@@ -88,7 +88,7 @@ class GameAct(Act):
 
         # reset menus
         # self.connectionmenu.Open()
-        self.actionsmenu.Open()
+        self.ordersmenu.Open()
         self.mapmenu.Open()
         self.vessellistmenu.Open()
 
@@ -100,7 +100,7 @@ class GameAct(Act):
 
         # close menus
         self.connectionmenu.Close()
-        self.actionsmenu.Close()
+        self.ordersmenu.Close()
         self.mapmenu.Close()
         self.vessellistmenu.Close()
 
@@ -113,7 +113,7 @@ class GameAct(Act):
         else:
             # handle menus if needed
             self.connectionmenu.Handle(event)
-            self.actionsmenu.Handle(event)
+            self.ordersmenu.Handle(event)
             self.mapmenu.Handle(event)
             self.vessellistmenu.Handle(event)
 
@@ -125,6 +125,6 @@ class GameAct(Act):
 
         # render menus if needed
         self.connectionmenu.Render()
-        self.actionsmenu.Render()
+        self.ordersmenu.Render()
         self.mapmenu.Render()
         self.vessellistmenu.Render()

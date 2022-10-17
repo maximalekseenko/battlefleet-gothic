@@ -9,7 +9,7 @@ from frontend.elements import OrderButton
 
 
 
-class ActionsMenu(Scene):
+class OrdersMenu(Scene):
     def __init__(self, act) -> None:
         super().__init__(act)
 
@@ -27,7 +27,7 @@ class ActionsMenu(Scene):
         
         # private variables
         self._selected_vessel:Vessel = None
-        self._selected_action:Order = SelectVessel(self)
+        self._selected_order:Order = SelectVessel(self)
 
 
     @property
@@ -39,10 +39,13 @@ class ActionsMenu(Scene):
     def selected_vessel(self, value:Vessel|None) -> None:
 
         # if None
-        if type(value) == None: self._selected_vessel == None
+        if value == None: 
+            self._selected_vessel == None
+            return
 
         # if same
-        if value == self._selected_vessel: return
+        if value == self._selected_vessel: 
+            return
 
         # get orders
         self.elements.clear()
@@ -54,23 +57,23 @@ class ActionsMenu(Scene):
 
 
     @property
-    def selected_action(self) -> Order:
-        return self._selected_action
+    def selected_order(self) -> Order:
+        return self._selected_order
 
 
-    @selected_action.setter
-    def selected_action(self, value:Order|None) -> None:
+    @selected_order.setter
+    def selected_order(self, value:Order|None) -> None:
 
         # if None
-        if value == None: self._selected_action = SelectVessel(self)
+        if value == None: self._selected_order = SelectVessel(self)
 
-        # if action
-        else: self._selected_action = value
+        # if order
+        else: self._selected_order = value
 
 
     def Position_Action(self, position):
-        self.selected_action.Do(position)
-        self.selected_action = None
+        self.selected_order.Do(position)
+        self.selected_order = None
 
 
     # ----------ON_STUFF----------

@@ -12,8 +12,8 @@ class OrderButton(Element):
         super().__init__(scene, surface_flags=pygame.SRCALPHA)
 
         # for snippets
-        from frontend.scenes import ActionsMenu
-        self.scene:ActionsMenu
+        from frontend.scenes import OrdersMenu
+        self.scene:OrdersMenu
 
         # variables
         from backend.game import Order
@@ -54,7 +54,7 @@ class OrderButton(Element):
                 if self.order.Is_Invisible(): return
                 if not self.rect.collidepoint(event.pos): return
 
-                self.scene.selected_action = self.order
+                self.scene.selected_order = self.order
 
 
     def On_Render(self, target:pygame.Surface):
@@ -67,7 +67,7 @@ class OrderButton(Element):
             pygame.draw.rect(target, theatre.settings["ui_color"], self.rect)
 
             # highlight
-            if self.order == self.scene.selected_action: pygame.draw.rect(target, theatre.settings["enemy_color"], self.rect, theatre.BUTTON_HIGHLIGHT_WIDTH)
+            if self.order == self.scene.selected_order: pygame.draw.rect(target, theatre.settings["enemy_color"], self.rect, theatre.BUTTON_HIGHLIGHT_WIDTH)
             if self.is_highlighted: pygame.draw.rect(target, theatre.settings["player_color"], self.rect, theatre.BUTTON_HIGHLIGHT_WIDTH)
 
         # main

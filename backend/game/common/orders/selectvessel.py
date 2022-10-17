@@ -10,8 +10,8 @@ class SelectVessel(game.Order):
 
     def __init__(self, scene) -> None:
         # super().__init__(None)
-        from frontend.scenes import ActionsMenu
-        self.scene:ActionsMenu = scene
+        from frontend.scenes import OrdersMenu
+        self.scene:OrdersMenu = scene
 
         self.game:game.Game = self.scene.act.game
 

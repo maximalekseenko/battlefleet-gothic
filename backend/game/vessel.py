@@ -87,6 +87,10 @@ class Vessel:
         return math.radians(self.rotation)
 
 
+    def Is_Collision(self, point:tuple[int,int]|list[int]):
+        return math.hypot(self.position[0]-point[0],self.position[1]-point[1]) <= self.BASE_RADIUS
+
+
     def Get_Order_By_Id(self, id) -> Order:
         for order in self.orders:
             if order.id == id: return order
