@@ -10,6 +10,26 @@ class Theatre(Theatre):
         super().__init__()
         pygame.key.set_repeat(100, 10)
 
+        # cursor
+        from math import sin, cos
+        cursor = pygame.Surface((15, 15), pygame.SRCALPHA)
+        cursor_rect = cursor.get_rect()
+        pygame.draw.circle(cursor, "#ffffff", cursor_rect.center, 2.5)
+        pygame.draw.line(cursor, "#ffffff", 
+            (cursor_rect.centerx, cursor_rect.centery + sin(cursor_rect.height / 5)), 
+            cursor_rect.midtop)
+        pygame.draw.line(cursor, "#ffffff", 
+            (cursor_rect.centerx, cursor_rect.centery - sin(cursor_rect.height / 5)), 
+            cursor_rect.midbottom)
+        pygame.draw.line(cursor, "#ffffff", 
+            (cursor_rect.centerx - cos(cursor_rect.height / 5), cursor_rect.centery), 
+            cursor_rect.midleft)
+        pygame.draw.line(cursor, "#ffffff", 
+            (cursor_rect.centerx + cos(cursor_rect.height / 5), cursor_rect.centery), 
+            cursor_rect.midright)
+
+        pygame.mouse.set_cursor(pygame.cursors.Cursor(cursor_rect.center, cursor))
+
         # consts
         self.FONT60 = pygame.font.Font(None, 60)
         self.FONT24 = pygame.font.Font(None, 24)
