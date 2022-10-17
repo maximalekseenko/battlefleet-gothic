@@ -41,12 +41,18 @@ class MapMenu(Scene):
                     self.act.actionsmenu.selected_action = None
 
         # move
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a: self.scrolled_point[0] += 1
             elif event.key == pygame.K_d: self.scrolled_point[0] -= 1
             elif event.key == pygame.K_w: self.scrolled_point[1] += 1
             elif event.key == pygame.K_s: self.scrolled_point[1] -= 1
             else: return
+
+        # zoom
+        elif event.type == pygame.MOUSEWHEEL:
+            if not self.rect.collidepoint(pygame.mouse.get_pos()): return
+
+            self.scaled_value -= event.y / 100
         
 
 
