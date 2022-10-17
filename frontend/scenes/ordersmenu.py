@@ -86,13 +86,15 @@ class OrdersMenu(Scene):
             self.noselection.blit(text_a, text_a.get_rect(centerx=self.noselection.get_rect().centerx, y=0))
             self.noselection.blit(text_b, text_b.get_rect(centerx=self.noselection.get_rect().centerx, y=text_a.get_height()))
         else:
-            content_top = self.rect.top + self.scrolled_value
+            content_top = self.scrolled_value
             self.content_height = 0
+
+            DISTANCE = 3
 
             for orderbutton in self.elements:
                 orderbutton.Update()
                 orderbutton.rect.top = self.content_height + content_top
-                self.content_height += orderbutton.rect.height + 1
+                self.content_height += orderbutton.rect.height + DISTANCE
             
         
 
@@ -139,26 +141,5 @@ class OrdersMenu(Scene):
             for element in self.elements: element.Render(self.surface)
 
         # render on screen
-        self.act.surface.blit(self.surface, (0,0))
-
-    def _Render_Orders(self):
-        if self.selected_vessel == None: return
-
-        height = self.scrolled_value
-        for order in self.selected_vessel.orders:
-
-            # if not visible
-            if order.Is_Invisible(): continue
-
-            # surface
-            order_surface = pygame.Surface((self.rect.width - 20, 25))
-            order_surface.fill(self.selected_vessel.owner.color)
-
-            # name
-            order_name = theatre.FONT12.render(order.NAME, 2, "#000000")
-            order_surface.blit(order_name, order_name.get_rect(midleft=(0,12.5)))
-
-            # final
-            self.surface.blit(order_surface, order_surface.get_rect(centerx=self.rect.centerx, top=height))
-            height += 26
+        self.act.surface.blit(self.surface, self.rect)
 

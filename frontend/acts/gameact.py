@@ -12,23 +12,16 @@ class GameAct(Act):
 
         # surface
         self.surface = pygame.display.get_surface()
-        self.vessellistsurface = pygame.Surface((
-            self.surface.get_width() * 1/4,
-            self.surface.get_height()))
-        self.minimapsurface = pygame.Surface((
-            self.surface.get_width() * 1/4, 
-            self.surface.get_height()))
 
         # game
         from backend.game import Game
         self.game:Game = Game()
 
         # scenes
-        from frontend.scenes import ConnectionMenu, OrdersMenu, MapMenu, VessellistMenu
+        from frontend.scenes import ConnectionMenu, OrdersMenu, MapMenu
         self.connectionmenu:ConnectionMenu = ConnectionMenu(self, self.surface)
         self.ordersmenu:OrdersMenu = OrdersMenu(self)
         self.mapmenu:MapMenu = MapMenu(self)
-        self.vessellistmenu:VessellistMenu = VessellistMenu(self, self.vessellistsurface)
 
 
         # TODO: DELETE
@@ -69,9 +62,9 @@ class GameAct(Act):
         # orders menu
         self.ordersmenu.rect = pygame.Rect(
             0,
-            0,
+            self.surface.get_height() * 1/4,
             self.surface.get_width() * 1/4,
-            self.surface.get_height())
+            self.surface.get_height() * 3/4)
 
         # map menu
         self.mapmenu.rect = pygame.Rect(
@@ -90,7 +83,6 @@ class GameAct(Act):
         # self.connectionmenu.Open()
         self.ordersmenu.Open()
         self.mapmenu.Open()
-        self.vessellistmenu.Open()
 
         # update
         # self.Update()
@@ -102,7 +94,6 @@ class GameAct(Act):
         self.connectionmenu.Close()
         self.ordersmenu.Close()
         self.mapmenu.Close()
-        self.vessellistmenu.Close()
 
     
     def On_Handle(self, event: pygame.event.Event) -> None:
@@ -115,7 +106,6 @@ class GameAct(Act):
             self.connectionmenu.Handle(event)
             self.ordersmenu.Handle(event)
             self.mapmenu.Handle(event)
-            self.vessellistmenu.Handle(event)
 
     
     def On_Render(self) -> None:
@@ -127,4 +117,3 @@ class GameAct(Act):
         self.connectionmenu.Render()
         self.ordersmenu.Render()
         self.mapmenu.Render()
-        self.vessellistmenu.Render()

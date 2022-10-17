@@ -28,13 +28,10 @@ class OrderButton(Element):
         width = max(0, self.scene.rect.width - 20)
         self.rect = pygame.Rect(0, 0, width, 20)
         self.rect.centerx = self.scene.rect.centerx
-        
-        # surf
-        self.surface.fill("#00000000")
 
         # text
-        name_surf = theatre.FONT20.render(self.order.NAME, 0, self.order.vessel.owner.color)
-        self.surface.blit(name_surf, name_surf.get_rect(midleft=self.rect.midleft))
+        text_surf = theatre.FONT20.render(self.order.NAME, 0, theatre.COLOR.UI_TEXT)
+        self.surface.blit(text_surf, text_surf.get_rect(midleft=self.rect.midleft))
         
         # is_highlighted
         self.is_highlighted = self.rect.collidepoint(pygame.mouse.get_pos())
@@ -44,34 +41,83 @@ class OrderButton(Element):
 
         # button highlight
         if event.type == pygame.MOUSEMOTION:
-            self.is_highlighted = self.rect.collidepoint(event.pos)
+            self.is_highlighted = self.rect.collidepoint(self.scene.Relative(event.pos))
 
-        # button clicks
+        # button click
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
 
+                # can be clicked
                 if self.order.Is_Disabled(): return
                 if self.order.Is_Invisible(): return
-                if not self.rect.collidepoint(event.pos): return
+                if not self.rect.collidepoint(self.scene.Relative(event.pos)): return
 
+                # resolve click
                 self.scene.selected_order = self.order
 
 
     def On_Render(self, target:pygame.Surface):
+
+        # can be rendered
         if self.order.Is_Invisible(): return
 
-        # background
-        if self.order.Is_Disabled(): pygame.draw.rect(target, "#505050", self.rect)
-        elif self.order.Is_Warn(): pygame.draw.rect(target, "#500000", self.rect)
+        # render background
+        self._Render_Background(target)
+
+        # render text
+        self._Render_Content(target)
+
+        # outline
+        self._Render_Outline(target)
+
+
+
+
+    def _Render_Background(self, target:pygame.Surface):
+
+        # disabled
+        if self.order.Is_Disabled():
+            pygame.draw.rect(target, theatre.COLOR[self.order.vessel.owner.color+'d2'], self.rect)
+
+        # selected
+        elif self.order == self.scene.selected_order: 
+            pygame.draw.rect(target, theatre.COLOR[self.order.vessel.owner.color+'l1'], self.rect)
+        
+        # idle
         else: 
-            pygame.draw.rect(target, theatre.settings["ui_color"], self.rect)
+            pygame.draw.rect(target, theatre.COLOR[self.order.vessel.owner.color], self.rect)
 
-            # highlight
-            if self.order == self.scene.selected_order: pygame.draw.rect(target, theatre.settings["enemy_color"], self.rect, theatre.BUTTON_HIGHLIGHT_WIDTH)
-            if self.is_highlighted: pygame.draw.rect(target, theatre.settings["player_color"], self.rect, theatre.BUTTON_HIGHLIGHT_WIDTH)
 
-        # main
+    def _Render_Content(self, target:pygame.Surface):
         target.blit(self.surface, self.rect)
 
 
+    def _Render_Outline(self, target:pygame.Surface):
+        if self.is_highlighted:
+
+            LENGTH = 10
+            WIDTH = 3
+            # ┏ ┐
+            # ┗ ┘
+            pygame.draw.line(target, theatre.COLOR.UI.OUTLINE,
+                self.rect.topleft,
+                (self.rect.left + LENGTH, self.rect.top), WIDTH)
+            pygame.draw.line(target, theatre.COLOR.UI.OUTLINE,
+                self.rect.topleft,
+                self.rect.bottomleft, WIDTH)
+            pygame.draw.line(target, theatre.COLOR.UI.OUTLINE,
+                self.rect.bottomleft,
+                (self.rect.left + LENGTH, self.rect.bottom), WIDTH)
+            # ┌ ┓
+            # └ ┛
+            pygame.draw.line(target, theatre.COLOR.UI.OUTLINE,
+                self.rect.topright,
+                (self.rect.right - LENGTH, self.rect.top), WIDTH)
+            pygame.draw.line(target, theatre.COLOR.UI.OUTLINE,
+                self.rect.topright,
+                self.rect.bottomright, WIDTH)
+            pygame.draw.line(target, theatre.COLOR.UI.OUTLINE,
+                self.rect.bottomright,
+                (self.rect.right - LENGTH, self.rect.bottom), WIDTH)
+        
 
