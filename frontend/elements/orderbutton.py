@@ -30,7 +30,7 @@ class OrderButton(Element):
         self.rect.centerx = self.scene.rect.centerx
 
         # text
-        text_surf = theatre.FONT20.render(self.order.NAME, 0, theatre.COLOR.UI_TEXT)
+        text_surf = theatre.FONT20.render(self.order.NAME, 0, theatre.COLOR.UI.TEXT)
         self.surface.blit(text_surf, text_surf.get_rect(midleft=self.rect.midleft))
         
         # is_highlighted
