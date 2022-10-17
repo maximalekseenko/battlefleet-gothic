@@ -47,7 +47,7 @@ class LunarClassCruiser(Vessel):
     # datasheet
     CLASSNAME = "LUNAR"
     HITS = 8
-    TYPE = "CRUISER"
+    TYPE = VESSELTYPE.CRUISER
     SPEED = 20
     TURNS = 45
     ARMAMENTS = []

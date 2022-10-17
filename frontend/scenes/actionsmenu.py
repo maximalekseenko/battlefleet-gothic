@@ -70,6 +70,7 @@ class ActionsMenu(Scene):
 
     def Position_Action(self, position):
         self.selected_action.Do(position)
+        self.selected_action = None
 
 
     # ----------ON_STUFF----------

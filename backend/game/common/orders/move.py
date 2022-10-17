@@ -7,11 +7,24 @@ class Move(Order):
     TYPE = "MOVEMENT"
 
 
-    def Do(self, target:tuple[int, int]=None) -> None:
+    def On_Do(self, target:tuple[int, int]=None) -> None:
         target = self.Fix_Target(target)
 
         # check if target valid
         if target == None: return
+
+        # check if turn speed left
+        if self.vessel.turn_speed <= 0: return
+
+        # check if same
+        if target == self.vessel.position: return
+
+        # remove distance
+        delta_X = self.vessel.position[0] - target[0]
+        delta_Y = self.vessel.position[1] - target[1]
+        sinner = sin(self.vessel.rad_rotation)
+        cosinner = -cos(self.vessel.rad_rotation)
+        self.vessel.turn_speed -= abs(cosinner * delta_X + sinner * delta_Y)
 
         self.vessel.position = target
 
@@ -32,7 +45,7 @@ class Move(Order):
         distance = abs(cosinner * delta_X + sinner * delta_Y)
 
         # cut distance
-        if distance > self.vessel.speed: distance = self.vessel.speed
+        if distance >= self.vessel.turn_speed: distance = self.vessel.turn_speed
 
         # fix distance
         target = self._Step(self.vessel.position, distance)
@@ -58,3 +71,6 @@ class Move(Order):
         # continue
         else: return self._Step((position[0] + step[0], position[1] + step[1]), distance)
 
+
+    def Is_Disabled(self) -> bool:
+        return self.vessel.turn_speed <= 0

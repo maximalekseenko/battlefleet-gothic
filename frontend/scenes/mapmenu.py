@@ -71,9 +71,10 @@ class MapMenu(Scene):
 
         # order
         if self.act.actionsmenu.selected_action != None and self.act.actionsmenu.selected_vessel != None:
-            pygame.draw.line(self.surface, "#a05000", 
+            target = self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))
+            if target: pygame.draw.line(self.surface, "#a05000", 
                 self.Convert_To_Surface(self.act.actionsmenu.selected_vessel.position), 
-                self.Convert_To_Surface(self.act.actionsmenu.selected_action.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))))
+                self.Convert_To_Surface(target))
 
         # vessels
         for vessel in self.act.game.forces:

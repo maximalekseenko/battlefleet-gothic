@@ -14,8 +14,9 @@ class VESSELTYPE(Enum):
 
 
     def __eq__(vessel_type_a, vessel_type_b: object) -> bool:
-        if vessel_type_a == VESSELTYPE.CAPITAL:
-            return vessel_type_b == VESSELTYPE.CRUISER or vessel_type_b == VESSELTYPE.BATTLESHIP
+        if vessel_type_a.value == VESSELTYPE.CAPITAL.value:
+            return vessel_type_b.value == VESSELTYPE.CRUISER.value \
+                or vessel_type_b.value == VESSELTYPE.BATTLESHIP.value
 
         return super().__eq__(vessel_type_b)
 

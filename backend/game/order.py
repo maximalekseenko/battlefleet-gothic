@@ -29,8 +29,12 @@ class Order:
     def Is_Disabled(self) -> bool: return False
     def Is_Warn(self) -> bool: return False
     def Fix_Target(self, target=None) -> any: pass
-    def Do(self, **kargs) -> None: pass
+    def On_Do(self, **kargs) -> None: pass
 
+    def Do(self, target=None):
+        # if self.Is_Disabled: return
+        # if self.Is_Invisible: return
+        self.On_Do(target)
 
     def Get(self, target) -> dict:
         return {

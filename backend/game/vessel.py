@@ -66,6 +66,13 @@ class Vessel:
             self.orders.append(order(self, order_id))
             order_id += 1
 
+        self.Turn_Reset()
+
+    
+    def Turn_Reset(self):
+        self.turn_speed = self.speed
+        self.turn_turns_amount = 1
+
 
     @property
     def rotation(self) -> int:
