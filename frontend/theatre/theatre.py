@@ -4,11 +4,16 @@ import json
 
 from engine import Theatre
 
+from .color import COLOR
+
+
 
 class Theatre(Theatre):
     def __init__(self) -> None:
         super().__init__()
         pygame.key.set_repeat(100, 10)
+
+        self.COLOR = COLOR()
 
         # cursor
         from math import sin, cos
