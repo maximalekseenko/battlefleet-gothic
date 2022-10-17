@@ -27,10 +27,6 @@ class Rotate(Order):
 
         # 
         rotation = (self.vessel.rotation - degrees(atan2(delta_Y, -delta_X)) % 360) % 360
-        print(rotation, 
-            self.vessel.rotation, 
-            -self.vessel.rotation % 360)
-        if self.vessel.turns < rotation < -self.vessel.turns % 360: 
-            return self.vessel.position
-        
-        else: return target
+        if self.vessel.turns > rotation or rotation > -self.vessel.turns % 360: 
+            return target
+        else: return self.vessel.position
