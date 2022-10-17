@@ -98,7 +98,7 @@ class MapMenu(Scene):
 
     def _Render_Vessel(self, vessel:Vessel):
         vessel_surface = pygame.Surface((10, 5), pygame.SRCALPHA)
-        pygame.draw.polygon(vessel_surface, vessel.owner.color, ((0,0), (9,2), (0,4)))
+        pygame.draw.polygon(vessel_surface, theatre.COLOR[vessel.owner.color], ((0,0), (9,2), (0,4)))
         vessel_surface = pygame.transform.rotate(vessel_surface, vessel.rotation)
         
         self.surface.blit(vessel_surface, vessel_surface.get_rect(center=self.Convert_To_Surface(vessel.position)))
