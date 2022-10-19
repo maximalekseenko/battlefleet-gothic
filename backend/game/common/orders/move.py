@@ -24,7 +24,7 @@ class Move(Order):
         delta_Y = self.vessel.position[1] - target[1]
         sinner = sin(self.vessel.rad_rotation)
         cosinner = -cos(self.vessel.rad_rotation)
-        self.vessel.turn_speed -= abs(cosinner * delta_X + sinner * delta_Y)
+        self.vessel.turn_speed = self.game.Round(self.vessel.turn_speed - abs(cosinner * delta_X + sinner * delta_Y))
 
         self.vessel.position = target
 
