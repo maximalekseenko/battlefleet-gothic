@@ -48,12 +48,12 @@ class Move(Order):
         if distance >= self.vessel.turn_speed: distance = self.vessel.turn_speed
 
         # fix distance
-        target = self._Step(self.vessel.position, distance)
+        target = self._Step(self.vessel.position, distance, self.vessel.position)
 
         return (self.game.Round(target[0]), self.game.Round(target[1]))
 
 
-    def _Step(self, position:tuple[int, int], distance:int):
+    def _Step(self, position:tuple[int, int], distance:int, last_valid_pos):
         step_acc = 0.5
 
         # get step
@@ -63,13 +63,19 @@ class Move(Order):
 
         # close
         distance -= hypot(*step)
-        # TODO: checks (blas markers ect.)
+
+        new_position = (position[0] + step[0], position[1] + step[1])
+        
+        # checks
+        ## other vessels
+        if all([self.vessel == vessel or hypot(new_position[0]-vessel.position[0],new_position[1]-vessel.position[1]) >= vessel.BASE_RADIUS + self.vessel.BASE_RADIUS for vessel in self.game.forces]):
+            last_valid_pos = new_position
 
         # if finished movement
-        if distance <= 0: return (position[0] + step[0], position[1] + step[1])
+        if distance <= 0: return last_valid_pos
         
         # continue
-        else: return self._Step((position[0] + step[0], position[1] + step[1]), distance)
+        else: return self._Step(new_position, distance, last_valid_pos)
 
 
     def Is_Disabled(self) -> bool:
