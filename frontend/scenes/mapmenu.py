@@ -75,7 +75,6 @@ class MapMenu(Scene):
 
         # order
         self._Render_Order()
-        self._Render_Select()
         self._Render_Highlight()
         self._Render_Vessel()
         self._Render_Cursor()
@@ -94,21 +93,20 @@ class MapMenu(Scene):
                 self.Convert_To_Surface(self.act.ordersmenu.selected_vessel.position), 
                 self.Convert_To_Surface(target))
 
-    
-    def _Render_Select(self):
-        if self.act.ordersmenu.selected_vessel == None: return
-        pygame.draw.circle(self.surface, 
-            theatre.COLOR[self.act.ordersmenu.selected_vessel.owner.color+'l1'], 
-            self.Convert_To_Surface(self.act.ordersmenu.selected_vessel.position),
-            self.act.ordersmenu.selected_vessel.BASE_RADIUS*self.scaled_value, 1)
-
 
     def _Render_Highlight(self) -> None:
-        if self.hilighted_vessel == None: return
-        pygame.draw.circle(self.surface, 
-            theatre.COLOR[self.hilighted_vessel.owner.color+'d2'], 
-            self.Convert_To_Surface(self.hilighted_vessel.position),
-            self.hilighted_vessel.BASE_RADIUS*self.scaled_value, 1)
+        for vessel in self.act.game.forces:
+
+            # get color add
+            if self.act.ordersmenu.selected_vessel == vessel: color_add = 'l1'
+            elif self.hilighted_vessel == vessel: color_add = 'd1'
+            else: color_add = 'd2'
+
+            # render
+            pygame.draw.circle(self.surface, 
+                theatre.COLOR[vessel.owner.color+color_add], 
+                self.Convert_To_Surface(vessel.position),
+                vessel.BASE_RADIUS*self.scaled_value, 1)
 
 
     def _Render_Vessel(self):
@@ -133,15 +131,18 @@ class MapMenu(Scene):
         # draw 
         RADIUS = 1.5
         pygame.draw.line(self.surface, "#ffffff",
-        (target[0] + RADIUS,
-        target[1] + RADIUS),
-        (target[0] - RADIUS,
-        target[1] - RADIUS))
+            (target[0] + RADIUS,
+            target[1] + RADIUS),
+            (target[0] - RADIUS,
+            target[1] - RADIUS))
         pygame.draw.line(self.surface, "#ffffff",
-        (target[0] + RADIUS,
-        target[1] - RADIUS),
-        (target[0] - RADIUS,
-        target[1] + RADIUS))
+            (target[0] + RADIUS,
+            target[1] - RADIUS),
+            (target[0] - RADIUS,
+            target[1] + RADIUS))
+        pygame.draw.circle(self.surface, "#ffffff",
+            target,
+            self.act.ordersmenu.selected_vessel.BASE_RADIUS*self.scaled_value, 1)
 
 
     def Convert_To_Map(self, point:list[int]):

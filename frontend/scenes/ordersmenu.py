@@ -4,7 +4,8 @@ import pygame
 from engine import Scene, Element
 from frontend.theatre import theatre
 from backend.game import Vessel, Order
-from backend.game.common.orders.selectvessel import SelectVessel
+from backend.game.common.orders.novessel import NoVessel
+from backend.game.common.orders.noorder import NoOrder
 from frontend.elements import OrderButton
 
 
@@ -27,45 +28,52 @@ class OrdersMenu(Scene):
         
         # private variables
         self._selected_vessel:Vessel = None
-        self._selected_order:Order = SelectVessel(self)
+        self._selected_order:Order = None
 
 
     @property
     def selected_vessel(self) -> Vessel:
-        return self._selected_vessel
+        if self._selected_vessel == None:
+            return self._selected_vessel_none
+        else:
+            return self._selected_vessel
 
 
     @selected_vessel.setter
     def selected_vessel(self, value:Vessel|None) -> None:
 
+        # if same
+        if value == self._selected_vessel: return
+        
+        self.elements.clear()
+
         # if None
         if value == None: 
-            self._selected_vessel == None
+            self._selected_vessel = None
             return
-
-        # if same
-        if value == self._selected_vessel: 
-            return
-
-        # get orders
-        self.elements.clear()
-        for order in value.orders:
-            self.elements.append(OrderButton(self, order))
 
         # if vessel
-        else: self._selected_vessel = value
+        else: 
+            self._selected_vessel = value
+            
+            # get orders
+            for order in value.orders:
+                self.elements.append(OrderButton(self, order))
 
 
     @property
     def selected_order(self) -> Order:
-        return self._selected_order
+        if self._selected_order == None:
+            return self._selected_order_none
+        else:
+            return self._selected_order
 
 
     @selected_order.setter
     def selected_order(self, value:Order|None) -> None:
 
         # if None
-        if value == None: self._selected_order = SelectVessel(self)
+        if value == None: self._selected_order = None
 
         # if order
         else: self._selected_order = value
@@ -78,6 +86,9 @@ class OrdersMenu(Scene):
 
     # ----------ON_STUFF----------
     def On_Update(self):
+        self._selected_vessel_none = NoVessel(self.act.game, self.act.game.player, (0,0), 0, -1)
+        self._selected_order_none = NoOrder(self)
+
         if self.selected_vessel == None:
             # no selection
             text_a = theatre.FONT24.render("NO VESSEL", 1, theatre.settings['enemy_color'])

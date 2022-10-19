@@ -13,8 +13,6 @@ class VesselInfoMenu(Scene):
         from frontend.acts import GameAct
         self.act:GameAct
 
-        self._hashed_selected_vessel = None
-
 
     def On_Open(self) -> None:
         self.Update()
@@ -85,7 +83,7 @@ class VesselInfoMenu(Scene):
 
         self._Render_UI()
 
-        if self.act.ordersmenu.selected_vessel != None or self.act.mapmenu.hilighted_vessel != None:
+        if self.act.ordersmenu._selected_vessel != None or self.act.mapmenu.hilighted_vessel != None:
             self._Render_Text()
             self._Render_Stats()
 
@@ -95,8 +93,8 @@ class VesselInfoMenu(Scene):
 
     def _Render_UI(self):
         if self.act.mapmenu.hilighted_vessel != None: color = self.act.mapmenu.hilighted_vessel.owner.color
-        elif self.act.ordersmenu.selected_vessel != None: color = self.act.ordersmenu.selected_vessel.owner.color
-        else: color = 'BLACK'
+        elif self.act.ordersmenu._selected_vessel != None: color = self.act.ordersmenu.selected_vessel.owner.color
+        else: color = self.act.game.player.color
 
         pygame.draw.rect(self.surface, theatre.COLOR[color+'d1'], self.top_rect)
         pygame.draw.rect(self.surface, theatre.COLOR[color+'d1'], self.hits_rect)
@@ -118,7 +116,7 @@ class VesselInfoMenu(Scene):
 
     def _Render_Stats(self):
         if self.act.mapmenu.hilighted_vessel != None: vessel = self.act.mapmenu.hilighted_vessel
-        elif self.act.ordersmenu.selected_vessel != None: vessel = self.act.ordersmenu.selected_vessel
+        elif self.act.ordersmenu._selected_vessel != None: vessel = self.act.ordersmenu.selected_vessel
 
         # type
         stat_text = f"{vessel.TYPE.name}"

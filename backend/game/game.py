@@ -88,6 +88,8 @@ class Game:
         for vessel in self.forces:
             if vessel.Is_Collision(postion):
                 return vessel
+        
+        return None
 
 
     def Get_Vessel_By_Id(self, id) -> Vessel:

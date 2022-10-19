@@ -3,13 +3,12 @@ from math import atan2, degrees, hypot, radians, sin, cos
 import backend.game as game
 
 
-class SelectVessel(game.Order):
+class NoOrder(game.Order):
     NAME = "SELECTVESSEL"
     TYPE = ""
 
 
     def __init__(self, scene) -> None:
-        # super().__init__(None)
         from frontend.scenes import OrdersMenu
         self.scene:OrdersMenu = scene
 
