@@ -43,7 +43,7 @@ class Rotate(Order):
 
         # move rule
         if self.vessel.TYPE == VESSELTYPE.BATTLESHIP:
-            return self.vessel.SPEED - self.vessel.turn_speed <= 15
+            return self.vessel.SPEED - self.vessel.turn_speed < 15
         elif self.vessel.TYPE == VESSELTYPE.CRUISER:
-            return self.vessel.SPEED - self.vessel.turn_speed <= 10
+            return self.vessel.SPEED - self.vessel.turn_speed < 10
         else: return True
