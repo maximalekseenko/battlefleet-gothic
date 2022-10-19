@@ -54,7 +54,7 @@ class Move(Order):
 
 
     def _Step(self, position:tuple[int, int], distance:int, last_valid_pos):
-        step_acc = 0.5
+        step_acc = 1/self.game.accuracy
 
         # get step
         step = (
