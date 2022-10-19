@@ -41,9 +41,6 @@ class GameAct(Act):
 
         self.game.Start()
 
-        self.ordersmenu.selected_vessel = vessel1p1
-        self.ordersmenu.selected_order = vessel1p1.orders[0]
-
 
     def On_Tick(self) -> None:
         self.ordersmenu.Tick()
