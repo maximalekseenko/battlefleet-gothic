@@ -51,7 +51,7 @@ class LunarClassCruiser(Vessel):
     SPEED = 20
     TURNS = 45
     ARMAMENTS = []
-    BASE_RADIUS = 5
+    BASE_RADIUS = 3.2
     
 
 
