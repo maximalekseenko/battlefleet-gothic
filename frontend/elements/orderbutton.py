@@ -56,7 +56,8 @@ class OrderButton(Element):
                 if not self.rect.collidepoint(self.scene.Relative(event.pos)): return
 
                 # resolve click
-                self.scene.selected_order = self.order
+                if self.scene.selected_order == self.order: self.scene.selected_order = None
+                else: self.scene.selected_order = self.order
 
 
     def On_Render(self, target:pygame.Surface):
