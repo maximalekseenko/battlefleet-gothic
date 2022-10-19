@@ -18,6 +18,8 @@ class MapMenu(Scene):
         self.scrolled_point:list[int] = [0, 0]
         self.scaled_value:int = 2
 
+        self.hilighted_vessel:Vessel = None
+
 
     # ----------ON_STUFF----------
 
@@ -54,7 +56,9 @@ class MapMenu(Scene):
 
             self.scaled_value -= event.y / 100
         
-
+        # vessel highlight
+        if event.type == pygame.MOUSEMOTION:
+            self.hilighted_vessel = self.act.game.Get_Vessel_In_Position(self.Convert_To_Map(event.pos))
 
 
     def On_Render(self) -> None:
@@ -70,18 +74,74 @@ class MapMenu(Scene):
             ))
 
         # order
+        self._Render_Order()
+        self._Render_Select()
+        self._Render_Highlight()
+        self._Render_Vessel()
+        self._Render_Cursor()
+
+        # finish
+        self.act.surface.blit(self.surface, self.rect)
+
+
+    def _Render_Order(self) -> None:
         if self.act.ordersmenu.selected_order != None and self.act.ordersmenu.selected_vessel != None:
             target = self.act.ordersmenu.selected_order.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))
+
+            # if target. == 
+
             if target: pygame.draw.line(self.surface, "#a05000", 
                 self.Convert_To_Surface(self.act.ordersmenu.selected_vessel.position), 
                 self.Convert_To_Surface(target))
 
-        # vessels
-        for vessel in self.act.game.forces:
-            self._Render_Vessel(vessel)
+    
+    def _Render_Select(self):
+        if self.act.ordersmenu.selected_vessel == None: return
+        pygame.draw.circle(self.surface, 
+            theatre.COLOR[self.act.ordersmenu.selected_vessel.owner.color+'l1'], 
+            self.Convert_To_Surface(self.act.ordersmenu.selected_vessel.position),
+            self.act.ordersmenu.selected_vessel.BASE_RADIUS*self.scaled_value, 1)
 
-        # finish
-        self.act.surface.blit(self.surface, self.rect)
+
+    def _Render_Highlight(self) -> None:
+        if self.hilighted_vessel == None: return
+        pygame.draw.circle(self.surface, 
+            theatre.COLOR[self.hilighted_vessel.owner.color+'d2'], 
+            self.Convert_To_Surface(self.hilighted_vessel.position),
+            self.hilighted_vessel.BASE_RADIUS*self.scaled_value, 1)
+
+
+    def _Render_Vessel(self):
+        for vessel in self.act.game.forces:
+
+            vessel_surface = pygame.Surface((10, 5), pygame.SRCALPHA)
+            pygame.draw.polygon(vessel_surface, theatre.COLOR[vessel.owner.color], ((0,0), (9,2), (0,4)))
+            vessel_surface = pygame.transform.rotate(vessel_surface, vessel.rotation)
+            
+            self.surface.blit(vessel_surface, vessel_surface.get_rect(center=self.Convert_To_Surface(vessel.position)))
+
+
+    def _Render_Cursor(self):
+        target = self.act.ordersmenu.selected_order.Fix_Target(self.Convert_To_Map(pygame.mouse.get_pos()))
+
+        # TODO test for vessel
+    
+        if target == None: target = self.Relative(pygame.mouse.get_pos())
+
+        else: target = self.Convert_To_Surface(target)
+
+        # draw 
+        RADIUS = 1.5
+        pygame.draw.line(self.surface, "#ffffff",
+        (target[0] + RADIUS,
+        target[1] + RADIUS),
+        (target[0] - RADIUS,
+        target[1] - RADIUS))
+        pygame.draw.line(self.surface, "#ffffff",
+        (target[0] + RADIUS,
+        target[1] - RADIUS),
+        (target[0] - RADIUS,
+        target[1] + RADIUS))
 
 
     def Convert_To_Map(self, point:list[int]):
@@ -90,15 +150,10 @@ class MapMenu(Scene):
             (point[1] - self.scrolled_point[1] - self.rect.top) / self.scaled_value
         ]
 
+
     def Convert_To_Surface(self, point:list[int]):
         return [
             point[0] * self.scaled_value + self.scrolled_point[0],
             point[1] * self.scaled_value + self.scrolled_point[1]
         ]
 
-    def _Render_Vessel(self, vessel:Vessel):
-        vessel_surface = pygame.Surface((10, 5), pygame.SRCALPHA)
-        pygame.draw.polygon(vessel_surface, theatre.COLOR[vessel.owner.color], ((0,0), (9,2), (0,4)))
-        vessel_surface = pygame.transform.rotate(vessel_surface, vessel.rotation)
-        
-        self.surface.blit(vessel_surface, vessel_surface.get_rect(center=self.Convert_To_Surface(vessel.position)))
