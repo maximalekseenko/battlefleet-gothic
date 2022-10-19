@@ -36,6 +36,8 @@ class GameAct(Act):
         vessel1p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (80, 20), 180+45)
         vessel2p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (80, 30), 180+10)
         vessel3p2 = self.game.Add_Vessel(LunarClassCruiser, p2, (80, 40), 180)
+        
+        self.game.player = self.game.players[0]
 
         self.game.Start()
 
@@ -66,15 +68,15 @@ class GameAct(Act):
         self.vesselinfomenu.rect = pygame.Rect(
             0,
             0,
-            self.surface.get_width() * 1/4,
-            self.surface.get_height() * 1/4)
+            150,
+            150)
 
         # orders menu
         self.ordersmenu.rect = pygame.Rect(
             0,
             self.vesselinfomenu.rect.bottom,
-            self.surface.get_width() * 1/4,
-            self.surface.get_height() * 3/4)
+            150,
+            self.surface.get_height() - 150)
 
         # map menu
         self.mapmenu.rect = pygame.Rect(

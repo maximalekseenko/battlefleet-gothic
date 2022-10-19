@@ -71,11 +71,14 @@ class VesselInfoMenu(Scene):
 
 
     def _Render_UI(self):
-        pygame.draw.rect(self.surface, "#000000", self.top_rect)
-        pygame.draw.rect(self.surface, "#000000", self.hits_rect)
-        pygame.draw.rect(self.surface, "#000000", self.speed_rect)
-        pygame.draw.rect(self.surface, "#000000", self.turns_rect)
-        pygame.draw.rect(self.surface, "#000000", self.shields_rect)
-        pygame.draw.rect(self.surface, "#000000", self.armour_rect)
-        pygame.draw.rect(self.surface, "#000000", self.turrets_rect)
+        if self.act.mapmenu.hilighted_vessel != None: color = self.act.mapmenu.hilighted_vessel.owner.color
+        elif self.act.ordersmenu.selected_vessel != None: color = self.act.ordersmenu.selected_vessel.owner.color
+        else: color = theatre.COLOR.BLACK
+        pygame.draw.rect(self.surface, theatre.COLOR[color+'d2'], self.top_rect)
+        pygame.draw.rect(self.surface, theatre.COLOR[color+'d2'], self.hits_rect)
+        pygame.draw.rect(self.surface, theatre.COLOR[color+'d2'], self.speed_rect)
+        pygame.draw.rect(self.surface, theatre.COLOR[color+'d2'], self.turns_rect)
+        pygame.draw.rect(self.surface, theatre.COLOR[color+'d2'], self.shields_rect)
+        pygame.draw.rect(self.surface, theatre.COLOR[color+'d2'], self.armour_rect)
+        pygame.draw.rect(self.surface, theatre.COLOR[color+'d2'], self.turrets_rect)
         

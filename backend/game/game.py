@@ -28,6 +28,8 @@ class Game:
         # flags
         self.is_started = False
 
+        self.player:Player = None
+
 
     def Add_Vessel(self, vessel_type, owner:Player|int, position:tuple[int, int], rotation:int) -> game.Vessel:
 
