@@ -129,7 +129,7 @@ class VesselInfoMenu(Scene):
         self.surface.blit(stat_surf, stat_surf.get_rect(center=self.hits_rect.center))
 
         # speed
-        stat_text = f"{vessel.turn_speed}/{vessel.speed}"
+        stat_text = f"{round(vessel.turn_speed,2)}/{vessel.speed}"
         stat_surf = theatre.FONT15.render(stat_text, 1, theatre.COLOR.UI.TEXT)
         self.surface.blit(stat_surf, stat_surf.get_rect(center=self.speed_rect.center))
 
