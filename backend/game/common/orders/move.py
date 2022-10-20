@@ -19,12 +19,8 @@ class Move(Order):
         # check if same
         if target == self.vessel.position: return
 
-        # remove distance
-        delta_X = self.vessel.position[0] - target[0]
-        delta_Y = self.vessel.position[1] - target[1]
-        sinner = sin(self.vessel.rad_rotation)
-        cosinner = -cos(self.vessel.rad_rotation)
-        self.vessel.turn_speed = self.game.Round(self.vessel.turn_speed - abs(cosinner * delta_X + sinner * delta_Y))
+        # remove turn distance
+        self.vessel.turn_speed -= self.distance
 
         self.vessel.position = target
 
@@ -39,43 +35,80 @@ class Move(Order):
         if 90 < (self.vessel.rotation - degrees(atan2(delta_Y, -delta_X)) % 360) % 360 < 270: 
             return self.vessel.position
 
-        # get distance
-        sinner = sin(self.vessel.rad_rotation)
-        cosinner = -cos(self.vessel.rad_rotation)
-        distance = abs(cosinner * delta_X + sinner * delta_Y)
+        # get target distance
+        sinner =   - sin(self.vessel.rad_rotation)
+        cosinner = + cos(self.vessel.rad_rotation)
+        target_distance = abs(cosinner * delta_X + sinner * delta_Y)
 
-        # cut distance
-        if distance >= self.vessel.turn_speed: distance = self.vessel.turn_speed
+        # hash
+        curr_position = self.vessel.position
+        curr_distance = 0
+
+        last_valid_position = self.vessel.position
+        last_valid_distance = 0
+
+        curr_valid_position = self.vessel.position
+        curr_valid_distance = 0
+
+        movement_left = self.vessel.turn_speed
+
+        STEP_ACC = 1/self.game.accuracy
+
+        print()
+        while movement_left - STEP_ACC >= 0:
+
+            # get new positon
+            curr_position = (
+                curr_position[0] + cos(self.vessel.rad_rotation) * STEP_ACC,
+                curr_position[1] - sin(self.vessel.rad_rotation) * STEP_ACC)
+            curr_distance += STEP_ACC
+
+            # count movements
+            movement_left -= STEP_ACC
+            movement_left += self._Get_Position_Movement_Decrease(curr_position)
+
+            # hash position if valid
+            if self._Is_Valid_Positon(curr_position):
+                last_valid_position = curr_valid_position
+                last_valid_distance = curr_valid_distance
+                curr_valid_position = curr_position
+                curr_valid_distance = curr_distance
+
+            # if target reached
+            if curr_distance >= target_distance:
+                if curr_valid_position == curr_position: break
+
+        # return
+        if abs(last_valid_distance - target_distance) > abs(curr_valid_distance - target_distance):
+            return_distance = curr_valid_distance
+            return_position = curr_valid_position
+        else:
+            return_distance = last_valid_distance
+            return_position = last_valid_position
 
         # fix distance
-        target = self._Step(self.vessel.position, distance, self.vessel.position)
+        if return_distance + STEP_ACC >= self.vessel.turn_speed:
+            return_distance = self.vessel.turn_speed
 
-        return (self.game.Round(target[0]), self.game.Round(target[1]))
+        # return 
+        self.distance = return_distance
+        return return_position
 
 
-    def _Step(self, position:tuple[int, int], distance:int, last_valid_pos):
-        step_acc = 1/self.game.accuracy
+    def _Is_Valid_Positon(self, position:tuple[int, int]|list[int]) -> bool:
 
-        # get step
-        step = (
-            + cos(self.vessel.rad_rotation) * step_acc,
-            - sin(self.vessel.rad_rotation) * step_acc)
+        # vessels
+        for vessel in self.game.forces:
+            if vessel == self.vessel: continue
+            if hypot(position[0] - vessel.position[0], position[1] - vessel.position[1]) < vessel.BASE_RADIUS + self.vessel.BASE_RADIUS:
+                return False
 
-        # close
-        distance -= hypot(*step)
+        # no obstacles
+        return True
 
-        new_position = (position[0] + step[0], position[1] + step[1])
-        
-        # checks
-        ## other vessels
-        if all([self.vessel == vessel or hypot(new_position[0]-vessel.position[0],new_position[1]-vessel.position[1]) >= vessel.BASE_RADIUS + self.vessel.BASE_RADIUS for vessel in self.game.forces]):
-            last_valid_pos = new_position
 
-        # if finished movement
-        if distance <= 0: return last_valid_pos
-        
-        # continue
-        else: return self._Step(new_position, distance, last_valid_pos)
+    def _Get_Position_Movement_Decrease(self, position:tuple[int, int]|list[int]) -> int:
+        return 0
 
 
     def Is_Disabled(self) -> bool:
