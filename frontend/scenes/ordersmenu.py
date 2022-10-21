@@ -140,8 +140,7 @@ class OrdersMenu(Scene):
         # render outline
         pygame.draw.rect(self.surface, theatre.settings['neutral_color'], (
             (0, self.scrolled_value), 
-            (self.rect.width, max(self.content_height, self.rect.height)))
-            , 2)
+            (self.rect.width, max(self.content_height, self.rect.height))), 2)
 
         # render elements
         ## vessel not selected

@@ -7,34 +7,48 @@ class Rotate(Order):
     NAME = "Rotate"
     TYPE = "MOVEMENT"
 
+    SHOW_BASE = False
+    SHOW_LINE = True
+    SHOW_VALUE = True
+    SHOW_TARGET = True
+
 
     def On_Do(self, target:tuple[int, int]=None) -> None:
-        target = self.Fix_Target(target)
+        data = self.Get_Data(target)
 
         # check if target valid
-        if target == None: return
-        if target == self.vessel.position: return
+        if data['value'] == None: return
 
-        delta_X = self.vessel.position[0] - target[0]
-        delta_Y = self.vessel.position[1] - target[1]
-        self.vessel.rotation = degrees(atan2(delta_Y, -delta_X)) % 360
+        self.vessel.rotation = data['value']
 
         self.vessel.turn_turns_amount -= 1
 
-        
-    def Fix_Target(self, target:tuple[int, int]=None) -> any:
-        if target == None: return
 
-        if self.Is_Disabled(): return
+    def Get_Default_Data(self):
+        return {
+            'position':self.vessel.position,
+            'value':'',
+            'show_value':'',
+            }
+
+
+    def Get_Data(self, target: tuple[int, int] | list[int] | None = None) -> dict[str, any]:
+        if target == None: super().Get_Default_Data() 
+        if self.Is_Disabled(): super().Get_Default_Data()
 
         delta_X = self.vessel.position[0] - target[0]
         delta_Y = self.vessel.position[1] - target[1]
 
-        # 
-        rotation = (self.vessel.rotation - degrees(atan2(delta_Y, -delta_X)) % 360) % 360
-        if self.vessel.turns > rotation or rotation > -self.vessel.turns % 360: 
-            return target
-        else: return self.vessel.position
+        new_rotation = degrees(atan2(delta_Y, -delta_X)) % 360
+        deltaRotation = (self.vessel.rotation - new_rotation) % 360
+
+        if self.vessel.turns < deltaRotation and deltaRotation < -self.vessel.turns % 360: return super().Get_Data()
+
+        # return
+        data = super().Get_Default_Data()
+        data['value'] = new_rotation
+        data['show_value'] = str(round(deltaRotation, 3))
+        return data
 
 
     def Is_Disabled(self) -> bool:

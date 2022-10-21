@@ -1,98 +1,121 @@
 from math import atan2, cos, degrees, hypot, sin
+from turtle import position
 
-from backend.game import Order
+from backend.game import Order, vessel
+
+
 
 class Move(Order):
     NAME = "Move"
     TYPE = "MOVEMENT"
 
+    SHOW_BASE = True
+    SHOW_LINE = True
+    SHOW_VALUE = True
+    SHOW_TARGET = True
+
 
     def On_Do(self, target:tuple[int, int]=None) -> None:
-        target = self.Fix_Target(target)
+        data = self.Get_Data(target)
+        target_position = data['position']
+        target_distande = data['value']
 
         # check if target valid
-        if target == None: return
+        if target_position == None: return
 
         # check if turn speed left
         if self.vessel.turn_speed <= 0: return
 
         # check if same
-        if target == self.vessel.position: return
+        if target_position == self.vessel.position: return
 
         # remove turn distance
-        self.vessel.turn_speed -= self.distance
+        self.vessel.turn_speed -= target_distande
 
-        self.vessel.position = target
+        self.vessel.position = target_position
 
-        
-    def Fix_Target(self, target:tuple[int, int]=None) -> any:
-        if target == None: return
+
+    def Get_Default_Data(self):
+        return {
+            'position':self.vessel.position,
+            'value':None,
+            'show_value':'',
+        }
+
+
+    def Get_Data(self, target: tuple[int, int] | list[int] | None = None) -> dict[str, any]:
+        if target == None: return self.Get_Default_Data()
 
         delta_X = self.vessel.position[0] - target[0]
         delta_Y = self.vessel.position[1] - target[1]
 
-        # direction check
-        if 90 < (self.vessel.rotation - degrees(atan2(delta_Y, -delta_X)) % 360) % 360 < 270: 
-            return self.vessel.position
-
         # get target distance
-        sinner =   - sin(self.vessel.rad_rotation)
-        cosinner = + cos(self.vessel.rad_rotation)
-        target_distance = abs(cosinner * delta_X + sinner * delta_Y)
+        sinner =   + sin(self.vessel.rad_rotation)
+        cosinner = - cos(self.vessel.rad_rotation)
+        target_distance = cosinner * delta_X + sinner * delta_Y
 
-        # hash
+        # position for loop
+        ## current position
         curr_position = self.vessel.position
         curr_distance = 0
-
+        ## second valid position
         last_valid_position = self.vessel.position
         last_valid_distance = 0
-
+        ## first valid positon
         curr_valid_position = self.vessel.position
         curr_valid_distance = 0
-
+        ## movement pool
         movement_left = self.vessel.turn_speed
 
-        STEP_ACC = 1/self.game.accuracy
+        STEP_ACC = 0.01
 
-        print()
+        # move in direction
         while movement_left - STEP_ACC >= 0:
 
-            # get new positon
+            # get new current positon
             curr_position = (
                 curr_position[0] + cos(self.vessel.rad_rotation) * STEP_ACC,
                 curr_position[1] - sin(self.vessel.rad_rotation) * STEP_ACC)
             curr_distance += STEP_ACC
 
-            # count movements
+            # reduce movement pool
             movement_left -= STEP_ACC
             movement_left += self._Get_Position_Movement_Decrease(curr_position)
 
-            # hash position if valid
+            # hash if current positon is valid
             if self._Is_Valid_Positon(curr_position):
+                ## second valid = first
                 last_valid_position = curr_valid_position
                 last_valid_distance = curr_valid_distance
+                ## first valid = current
                 curr_valid_position = curr_position
                 curr_valid_distance = curr_distance
 
             # if target reached
             if curr_distance >= target_distance:
+                ## continue until we find valid
                 if curr_valid_position == curr_position: break
 
-        # return
+        # find valid position, closest to target position
+        ## first valid is closer
         if abs(last_valid_distance - target_distance) > abs(curr_valid_distance - target_distance):
             return_distance = curr_valid_distance
             return_position = curr_valid_position
+        ## second valid is closer
         else:
             return_distance = last_valid_distance
             return_position = last_valid_position
 
-        # fix distance
+        # empty pool if pool is sell then accurancy
         if return_distance + STEP_ACC >= self.vessel.turn_speed:
             return_distance = self.vessel.turn_speed
 
-        # return 
-        self.distance = return_distance
-        return return_position
+        # return
+        data = self.Get_Default_Data()
+        data['position'] = return_position
+        data['value'] = return_distance
+        data['show_value'] = round(return_distance, 5)
+        return data
 
 
     def _Is_Valid_Positon(self, position:tuple[int, int]|list[int]) -> bool:
