@@ -36,7 +36,7 @@ class MapMenu(Scene):
 
                 # position order
                 if event.button == 1: 
-                    self.act.ordersmenu.Position_Action(self.Convert_To_Map(event.pos))
+                    self.act.ordersmenu.Position_Action(self.Convert_Global_To_Map(event.pos))
 
                 # cancel order selection
                 elif event.button == 3:
@@ -54,11 +54,39 @@ class MapMenu(Scene):
         elif event.type == pygame.MOUSEWHEEL:
             if not self.rect.collidepoint(pygame.mouse.get_pos()): return
 
-            self.scaled_value -= event.y / 100
-        
+            self._Handle_Zoom(event.y)
+            
         # vessel highlight
         if event.type == pygame.MOUSEMOTION:
-            self.hilighted_vessel = self.act.game.Get_Vessel_In_Position(self.Convert_To_Map(event.pos))
+            self.hilighted_vessel = self.act.game.Get_Vessel_In_Position(self.Convert_Relative_To_Map(self.Relative(event.pos)))
+
+    # def _Handle_Move(self, key) -> None:
+
+
+    def _Handle_Zoom(self, value):
+
+        SCALE_MIN = 1.5
+        SCALE_MAX = 15
+        SCALE_SPEED = 0.01
+
+        # save old mouse position
+        mouse_position = pygame.mouse.get_pos()
+
+        # get map point mouse was focus on
+        map_mouse_position = self.Convert_Global_To_Map(mouse_position)
+
+        # scale
+        self.scaled_value -= value * SCALE_SPEED
+        ## check limits
+        if self.scaled_value < SCALE_MIN: self.scaled_value = SCALE_MIN
+        if self.scaled_value > SCALE_MAX: self.scaled_value = SCALE_MAX
+
+        # get focus map point position after scale
+        new_mouse_position = self.Convert_Map_To_Global(map_mouse_position)
+
+        # scroll for mouse to be on that map point
+        self.scrolled_point[0] += mouse_position[0] - new_mouse_position[0]
+        self.scrolled_point[1] += mouse_position[1] - new_mouse_position[1]
 
 
     def On_Render(self) -> None:
@@ -69,13 +97,13 @@ class MapMenu(Scene):
 
         # game borders
         pygame.draw.rect(self.surface, "#000000", (
-            self.Convert_To_Surface((0, 0)), 
+            self.Convert_Map_To_Relative((0, 0)), 
             (self.act.game.size[0] * self.scaled_value, self.act.game.size[1] * self.scaled_value)
             ))
 
         # order
-        order_data = self.act.ordersmenu.selected_order.Get_Data(self.Convert_To_Map(pygame.mouse.get_pos()))
-        order_data['position'] = self.Convert_To_Surface(order_data['position']) if order_data['position'] else self.Relative(pygame.mouse.get_pos())
+        order_data = self.act.ordersmenu.selected_order.Get_Data(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
+        order_data['position'] = self.Convert_Map_To_Relative(order_data['position']) if order_data['position'] else self.Relative(pygame.mouse.get_pos())
         order_data['show_value'] = str(order_data['show_value']) if order_data['show_value'] else ''
 
         self._Render_Order(order_data)
@@ -93,7 +121,7 @@ class MapMenu(Scene):
             # line
             if self.act.ordersmenu.selected_order.SHOW_LINE:
                     pygame.draw.line(self.surface, "#a05000", 
-                        self.Convert_To_Surface(self.act.ordersmenu.selected_vessel.position), 
+                        self.Convert_Map_To_Relative(self.act.ordersmenu.selected_vessel.position), 
                         order_data['position'])
 
 
@@ -108,7 +136,7 @@ class MapMenu(Scene):
             # render
             pygame.draw.circle(self.surface, 
                 theatre.COLOR[vessel.owner.color+color_add], 
-                self.Convert_To_Surface(vessel.position),
+                self.Convert_Map_To_Relative(vessel.position),
                 vessel.BASE_RADIUS*self.scaled_value, 1)
 
 
@@ -119,7 +147,7 @@ class MapMenu(Scene):
             pygame.draw.polygon(vessel_surface, theatre.COLOR[vessel.owner.color], ((0,0), (9,2), (0,4)))
             vessel_surface = pygame.transform.rotate(vessel_surface, vessel.rotation)
             
-            self.surface.blit(vessel_surface, vessel_surface.get_rect(center=self.Convert_To_Surface(vessel.position)))
+            self.surface.blit(vessel_surface, vessel_surface.get_rect(center=self.Convert_Map_To_Relative(vessel.position)))
 
 
     def _Render_Cursor(self, order_data):
@@ -151,16 +179,30 @@ class MapMenu(Scene):
             self.surface.blit(text_surf, text_surf.get_rect(topleft=self.Relative(pygame.mouse.get_pos())))
 
 
-    def Convert_To_Map(self, point:list[int]):
+    def Convert_Relative_To_Map(self, point:list[int]):
         return [
-            (point[0] - self.scrolled_point[0] - self.rect.left) / self.scaled_value,
-            (point[1] - self.scrolled_point[1] - self.rect.top) / self.scaled_value
+            (point[0] - self.scrolled_point[0]) / self.scaled_value,
+            (point[1] - self.scrolled_point[1]) / self.scaled_value
+        ]
+
+    def Convert_Global_To_Map(self, point:list[int]):
+        point = self.Relative(point)
+        return [
+            (point[0] - self.scrolled_point[0]) / self.scaled_value,
+            (point[1] - self.scrolled_point[1]) / self.scaled_value
         ]
 
 
-    def Convert_To_Surface(self, point:list[int]):
+    def Convert_Map_To_Relative(self, point:list[int]):
         return [
             point[0] * self.scaled_value + self.scrolled_point[0],
             point[1] * self.scaled_value + self.scrolled_point[1]
         ]
+
+
+    def Convert_Map_To_Global(self, point:list[int]):
+        return self.Global([
+            point[0] * self.scaled_value + self.scrolled_point[0],
+            point[1] * self.scaled_value + self.scrolled_point[1]
+        ])
 
