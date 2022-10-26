@@ -1,9 +1,7 @@
-from backend.game.order import Order
-
-from backend.game import FIREARC
+from backend import game
 
 
-class Armament:
+class Armament(game.Order):
     """
     \n constants:
     *   `NAME`
@@ -19,9 +17,7 @@ class Armament:
     NAME:str
     RANGE:int
     FIREPOWER:int
-    FIREARC:FIREARC
-    
-    ARMAMENT_ORDER:Order
+    FIREARC:game.FIREARC
 
 
     def __init__(self, vessel, firearc=None) -> None:

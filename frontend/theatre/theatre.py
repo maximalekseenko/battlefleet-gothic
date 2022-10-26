@@ -69,14 +69,14 @@ class Theatre(Theatre):
     def Read_Settings(self):
 
         # read from file
-        with open("settings.json", 'r') as settings_file: settings_data:dict = json.load(settings_file)
+        # with open("settings.json", 'r') as settings_file: settings_data:dict = json.load(settings_file)
 
         # reset settings
         self.settings = self.DEFAULT_SETTINGS.copy()
 
         # set variables
-        for setting_item in settings_data.items():
-            self.settings[setting_item[0]] = setting_item[1]
+        # for setting_item in settings_data.items():
+        #     self.settings[setting_item[0]] = setting_item[1]
 
 
     def Write_Settings(self):

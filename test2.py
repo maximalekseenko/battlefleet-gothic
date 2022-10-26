@@ -2,9 +2,10 @@ from backend.game.common.orders.move import Move
 from backend.game.common.orders.rotate import Rotate
 from backend.game.common.orders.allaheadfull import AllAheadFull
 from backend.game import Vessel, VESSELTYPE, Armament, FIREARC
+from backend.game.common.orders.weaponsbattrey import WeaponsBattrey
 
 
-class PortWeaponsBattery(Armament):
+class PortWeaponsBattery(WeaponsBattrey):
     NAME = "Port-WEAPONS-BATTERY"
     RANGE = 60
     FIREPOWER = 6
@@ -50,10 +51,9 @@ class LunarClassCruiser(Vessel):
     TYPE = VESSELTYPE.CRUISER
     SPEED = 20
     TURNS = 45
-    ARMAMENTS = []
     BASE_RADIUS = 3.2
     
 
 
     # actions
-    ORDERS = [Move, Rotate, AllAheadFull]
+    ORDERS = [Move, Rotate, AllAheadFull, PortWeaponsBattery]

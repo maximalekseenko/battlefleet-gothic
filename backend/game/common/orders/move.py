@@ -1,18 +1,14 @@
 from math import atan2, cos, degrees, hypot, sin
-from turtle import position
 
-from backend.game import Order, vessel
+from backend.game import Order, vessel, position
 
 
 
 class Move(Order):
-    NAME = "Move"
-    TYPE = "MOVEMENT"
-
-    SHOW_BASE = True
-    SHOW_LINE = True
-    SHOW_VALUE = True
-    SHOW_TARGET = True
+    KEYWORD = 'movement'
+    NAME = 'Move Vessel'
+    PHASE = 'Movement'
+    TARGET = position
 
 
     def On_Do(self, target:tuple[int, int]=None) -> None:

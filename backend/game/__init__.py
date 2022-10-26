@@ -1,3 +1,5 @@
+from .position import position
+
 # enums
 from .enums import FIREARC
 from .enums import VESSELTYPE

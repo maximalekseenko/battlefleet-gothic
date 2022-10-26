@@ -63,7 +63,7 @@ class OrderButton(Element):
     def On_Render(self, target:pygame.Surface):
 
         # can be rendered
-        if self.order.Is_Invisible(): return
+        if self.order.is_visible: return
 
         # render background
         self._Render_Background(target)
@@ -80,7 +80,7 @@ class OrderButton(Element):
     def _Render_Background(self, target:pygame.Surface):
 
         # disabled
-        if self.order.Is_Disabled():
+        if self.order.is_disabled:
             pygame.draw.rect(target, theatre.COLOR[self.order.vessel.owner.color+'d2'], self.rect)
 
         # selected

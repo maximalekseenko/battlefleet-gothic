@@ -1,26 +1,65 @@
 class Order:
     '''
     \n constants:
-    *   `NAME`
-    *   `TYPE`
-    *   `SHOW_BASE`
-    *   `SHOW_LINE`
-    *   `SHOW_VALUE`
-    *   `SHOW_TARGET`
-    \n functions:
-    *   `Validate`
-    *   `On_Give`
-    *   `Is_Visible`
-    *   `Is_Enabled`
-    *   `Is_Warn`
-    '''
-    NAME:str
-    TYPE:str
+    *   `KEYWORD`:`str` - Keyword for finding event. Must be unique.
+    *   `NAME`:`str` - Name that will be shown on OrdersMenu.
+    *   `PHASE`:`???` - 
+    *   `TARGET`:`None`|`Vessel`|`position` - Target this event needs to start.
+    
+    \n properties:
+    *   `is_visible`->`bool` - Should this order be shown in the menu.
+    *   `is_disabled`->`bool` - Should this order be shown as disabled in the menu.
+    *   `is_warn`->`bool` - Should this order be highlighed red in the menu and prevent round finish.
 
-    SHOW_BASE:bool
-    SHOW_LINE:bool
-    SHOW_VALUE:bool
-    SHOW_TARGET:bool
+    \n functions:
+    *   Get_Front_Data ->
+    *   Give
+
+    \n KEYWORD+NAME+PHASE+TARGET
+    \n is_visible+is_disabled+is_warn
+    '''
+
+
+    # constants
+    KEYWORD:str = ''
+    NAME:str = ''
+    PHASE:None = ''
+    TARGET:str = None
+
+
+    # properties
+    @property
+    def is_visible(self) -> bool: return True
+    @property
+    def is_disabled(self) -> bool: return False
+    @property
+    def is_warn(self) -> bool: return False
+
+
+    # functions
+    def Get_Front_Data(self, mouse_pos:tuple[int,int]|None) -> dict:
+        """
+        \n Returns data for frontal preview of this order. 
+        \n Note, that `mouse_pos` is in map units.
+        \n keys:
+        *   `'value'`:`str` - what text should be rendered near the cursor. If `False` wont be rendered at all.
+        *   `'arc'`:`???` - ???. If `False` wont be rendered at all.
+        *   `'position'`:`position` - position of the target. 
+        *   `'base'`:`bool` - should base of the selected vessel be rendered around the `'position'`.
+        *   `'target'`:`bool` - should target dot be rendered at `'position'`. If `False` wont be rendered at all.
+        *   `'line'`:`bool` - should be line from selected vessel to target be rendered.
+        \n value+arc+position+base+target+line
+        """
+
+        return {
+            'value'     : False,
+            'arc'       : False,
+            'position'  : mouse_pos,
+            'base'      : False,
+            'target'    : False,
+            'line'      : False,
+        }
+
 
 
 
@@ -34,34 +73,3 @@ class Order:
 
         self.id:int = id
 
-
-    def Is_Invisible(self) -> bool: return False
-    def Is_Disabled(self) -> bool: return False
-    def Is_Warn(self) -> bool: return False
-    def Get_Default_Data(self):
-        '''
-        'position':,
-        'value':,
-        'show_value':,
-        '''
-        return {
-            'position':None,
-            'value':None,
-            'show_value':''
-        }
-    def Get_Data(self, target:tuple[int, int]|list[int]|None=None) -> dict[str,any]: 
-        return self.Get_Default_Data()
-    def On_Do(self, target=None) -> None: pass
-    def Get_Display_Text(self, target=None): return ''
-
-    def Do(self, target=None):
-        # if self.Is_Disabled: return
-        # if self.Is_Invisible: return
-        self.On_Do(target)
-
-    def Get(self, target) -> dict:
-        return {
-            'vesselid': self.vessel.id,
-            'orderid': self.id,
-            'target': target
-        }

@@ -101,31 +101,70 @@ class MapMenu(Scene):
             (self.act.game.size[0] * self.scaled_value, self.act.game.size[1] * self.scaled_value)
             ))
 
-        # order
-        order_data = self.act.ordersmenu.selected_order.Get_Data(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
-        order_data['position'] = self.Convert_Map_To_Relative(order_data['position']) if order_data['position'] else self.Relative(pygame.mouse.get_pos())
-        order_data['show_value'] = str(order_data['show_value']) if order_data['show_value'] else ''
+        # get orders data
+        order_data = self.act.ordersmenu.selected_order.Get_Front_Data(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
+        order_data['position'] = self.Convert_Map_To_Relative(order_data['position'])
 
-        self._Render_Order(order_data)
-        self._Render_Highlight()
-        self._Render_Vessels()
-        self._Render_Cursor(order_data)
+        # rendering
+        ## order line
+        if order_data['line']: self._Render_Order_Line(order_data)
+        ## vessel highlights
+        self._Render_Vessel_Highlights()
+        ## order base
+        if order_data['base']: self._Render_Order_Base(order_data)
+        ## vessel visuals
+        self._Render_Vessel_Visuals()
+        ## order arc
+        if order_data['arc']:pass
+        ## order target
+        if order_data['target']: self._Render_Order_Target(order_data)
+        ## order value
+        if order_data['value']: self._Render_Order_Value(order_data)
 
         # finish
         self.act.surface.blit(self.surface, self.rect)
 
 
-    def _Render_Order(self, order_data:dict[str,any]) -> None:
-        if self.act.ordersmenu.selected_order and self.act.ordersmenu.selected_vessel:
+    def _Render_Order_Line(self, order_data:dict[str,any]) -> None:
+        COLOR = "#a05000"
 
-            # line
-            if self.act.ordersmenu.selected_order.SHOW_LINE:
-                    pygame.draw.line(self.surface, "#a05000", 
-                        self.Convert_Map_To_Relative(self.act.ordersmenu.selected_vessel.position), 
-                        order_data['position'])
+        pygame.draw.line(self.surface, COLOR, 
+            self.Convert_Map_To_Relative(self.act.ordersmenu.selected_vessel.position), 
+            self.Convert_Map_To_Relative(order_data['position']))
 
 
-    def _Render_Highlight(self) -> None:
+    def _Render_Order_Base(self, order_data:dict[str,any]) -> None:
+        COLOR = "#a05000"
+
+        pygame.draw.circle(self.surface, COLOR,
+            order_data['position'],
+            self.act.ordersmenu.selected_vessel.BASE_RADIUS*self.scaled_value, 1)
+
+
+    def _Render_Order_Target(self, order_data:dict[str,any]) -> None:
+        RADIUS = 1.5
+        COLOR = "#ffffff"
+
+        pygame.draw.line(self.surface, COLOR,
+            (order_data['position'][0] + RADIUS,
+            order_data['position'][1] + RADIUS),
+            (order_data['position'][0] - RADIUS,
+            order_data['position'][1] - RADIUS))
+        pygame.draw.line(self.surface, COLOR,
+            (order_data['position'][0] + RADIUS,
+            order_data['position'][1] - RADIUS),
+            (order_data['position'][0] - RADIUS,
+            order_data['position'][1] + RADIUS))
+
+
+    def _Render_Order_Value(self, order_data:dict[str,any]) -> None:
+        COLOR = "#ffffff"
+
+        text_surf = theatre.FONT15.render(order_data['value'], 1, COLOR)
+        self.surface.blit(text_surf, text_surf.get_rect(topleft=self.Relative(pygame.mouse.get_pos())))
+
+
+    def _Render_Vessel_Highlights(self) -> None:
         for vessel in self.act.game.forces:
 
             # get color add
@@ -140,43 +179,19 @@ class MapMenu(Scene):
                 vessel.BASE_RADIUS*self.scaled_value, 1)
 
 
-    def _Render_Vessels(self):
+    def _Render_Vessel_Visuals(self) -> None:
         for vessel in self.act.game.forces:
 
+            # craete visual 
+            # TODO:hash?
             vessel_surface = pygame.Surface((10, 5), pygame.SRCALPHA)
             pygame.draw.polygon(vessel_surface, theatre.COLOR[vessel.owner.color], ((0,0), (9,2), (0,4)))
+
+            # rotate visual
             vessel_surface = pygame.transform.rotate(vessel_surface, vessel.rotation)
             
+            # blit visual
             self.surface.blit(vessel_surface, vessel_surface.get_rect(center=self.Convert_Map_To_Relative(vessel.position)))
-
-
-    def _Render_Cursor(self, order_data):
-
-        RADIUS = 1.5
-
-        # target
-        if self.act.ordersmenu.selected_order.SHOW_TARGET:
-            pygame.draw.line(self.surface, "#ffffff",
-                (order_data['position'][0] + RADIUS,
-                order_data['position'][1] + RADIUS),
-                (order_data['position'][0] - RADIUS,
-                order_data['position'][1] - RADIUS))
-            pygame.draw.line(self.surface, "#ffffff",
-                (order_data['position'][0] + RADIUS,
-                order_data['position'][1] - RADIUS),
-                (order_data['position'][0] - RADIUS,
-                order_data['position'][1] + RADIUS))
-            
-        # base 
-        if self.act.ordersmenu.selected_order.SHOW_BASE:
-            pygame.draw.circle(self.surface, "#ffffff",
-                order_data['position'],
-                self.act.ordersmenu.selected_vessel.BASE_RADIUS*self.scaled_value, 1)
-
-        # value
-        if self.act.ordersmenu.selected_order.SHOW_VALUE:
-            text_surf = theatre.FONT15.render(order_data['show_value'], 1, "#ffffff")
-            self.surface.blit(text_surf, text_surf.get_rect(topleft=self.Relative(pygame.mouse.get_pos())))
 
 
     def Convert_Relative_To_Map(self, point:list[int]):

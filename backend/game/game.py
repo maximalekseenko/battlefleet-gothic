@@ -81,12 +81,12 @@ class Game:
         return self.player_colors.pop()
 
 
-    def Get_Vessel_In_Position(self, postion, is_enemy=False, is_ally=False, is_neutral=False, is_own=False) -> Vessel:
+    def Get_Vessel_In_Position(self, position, is_enemy=False, is_ally=False, is_neutral=False, is_own=False) -> Vessel:
 
         if is_enemy and is_ally and is_neutral and is_own == False: return None
 
         for vessel in self.forces:
-            if vessel.Is_Collision(postion):
+            if vessel.Is_Collision(position):
                 return vessel
         
         return None
