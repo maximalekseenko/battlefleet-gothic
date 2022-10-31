@@ -1,5 +1,5 @@
 import pygame
-from backend.game import Vessel
+import backend.game as game
 
 # engine
 from engine import Scene
@@ -18,7 +18,7 @@ class MapMenu(Scene):
         self.scrolled_point:list[int] = [0, 0]
         self.scaled_value:int = 2
 
-        self.hilighted_vessel:Vessel = None
+        self.hilighted_vessel:game.Vessel = None
 
 
     # ----------ON_STUFF----------
@@ -32,15 +32,7 @@ class MapMenu(Scene):
 
         if event.type == pygame.MOUSEBUTTONDOWN: 
             if not self.rect.collidepoint(event.pos): return
-            else:
-
-                # position order
-                if event.button == 1: 
-                    self.act.ordersmenu.Position_Action(self.Convert_Global_To_Map(event.pos))
-
-                # cancel order selection
-                elif event.button == 3:
-                    self.act.ordersmenu.selected_order = None
+            self._Handle_MBD(event.button, event.pos)
 
         # move
         elif event.type == pygame.KEYDOWN:
@@ -53,7 +45,6 @@ class MapMenu(Scene):
         # zoom
         elif event.type == pygame.MOUSEWHEEL:
             if not self.rect.collidepoint(pygame.mouse.get_pos()): return
-
             self._Handle_Zoom(event.y)
             
         # vessel highlight
@@ -61,6 +52,14 @@ class MapMenu(Scene):
             self.hilighted_vessel = self.act.game.Get_Vessel_In_Position(self.Convert_Relative_To_Map(self.Relative(event.pos)))
 
     # def _Handle_Move(self, key) -> None:
+
+    def _Handle_MBD(self, button, position):
+
+        # position order
+        if button == 1: self.act.ordersmenu.selected_order.Do(self.Convert_Global_To_Map(position))
+
+        # cancel order selection
+        elif button == 3: self.act.ordersmenu.selected_order = None
 
 
     def _Handle_Zoom(self, value):
@@ -91,38 +90,48 @@ class MapMenu(Scene):
 
     def On_Render(self) -> None:
 
-        # background
+        # background and outline
         self.surface.fill(theatre.settings['background_color'])
         pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 1)
 
-        # game borders
-        pygame.draw.rect(self.surface, "#000000", (
-            self.Convert_Map_To_Relative((0, 0)), 
-            (self.act.game.size[0] * self.scaled_value, self.act.game.size[1] * self.scaled_value)
-            ))
 
         # get orders data
-        order_data = self.act.ordersmenu.selected_order.Get_Front_Data(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
+        order_data = self.act.ordersmenu.selected_order.Get_Position_Data(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
         order_data['position'] = self.Convert_Map_To_Relative(order_data['position'])
 
         # rendering
-        ## order line
-        if order_data['line']: self._Render_Order_Line(order_data)
+        ## game background
+        self._Render_Game_Background()
+        # ## order line
+        # if order_data['line']: self._Render_Order_Line(order_data)
         ## vessel highlights
         self._Render_Vessel_Highlights()
-        ## order base
-        if order_data['base']: self._Render_Order_Base(order_data)
+        # ## order base
+        # if order_data['base']: self._Render_Order_Base(order_data)
         ## vessel visuals
         self._Render_Vessel_Visuals()
-        ## order arc
-        if order_data['arc']:pass
-        ## order target
-        if order_data['target']: self._Render_Order_Target(order_data)
-        ## order value
-        if order_data['value']: self._Render_Order_Value(order_data)
+        # ## order arc
+        # if order_data['arc']:pass
+        # ## order target
+        # if order_data['target']: self._Render_Order_Target(order_data)
+        # ## order value
+        # if order_data['value']: self._Render_Order_Value(order_data)
+
+
+        # TODO:DELETE
+        self.act.ordersmenu.selected_order.Preview(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
+        
 
         # finish
         self.act.surface.blit(self.surface, self.rect)
+
+
+    def _Render_Game_Background(self) -> None:
+        COLOR =  "#000000"
+        pygame.draw.rect(self.surface, COLOR, (
+            self.Convert_Map_To_Relative((0, 0)), 
+            (self.act.game.size[0] * self.scaled_value, self.act.game.size[1] * self.scaled_value)
+            ))
 
 
     def _Render_Order_Line(self, order_data:dict[str,any]) -> None:
@@ -130,7 +139,7 @@ class MapMenu(Scene):
 
         pygame.draw.line(self.surface, COLOR, 
             self.Convert_Map_To_Relative(self.act.ordersmenu.selected_vessel.position), 
-            self.Convert_Map_To_Relative(order_data['position']))
+            order_data['position'])
 
 
     def _Render_Order_Base(self, order_data:dict[str,any]) -> None:
@@ -195,29 +204,22 @@ class MapMenu(Scene):
 
 
     def Convert_Relative_To_Map(self, point:list[int]):
-        return [
+        return game.position(
             (point[0] - self.scrolled_point[0]) / self.scaled_value,
             (point[1] - self.scrolled_point[1]) / self.scaled_value
-        ]
+        )
 
     def Convert_Global_To_Map(self, point:list[int]):
-        point = self.Relative(point)
-        return [
-            (point[0] - self.scrolled_point[0]) / self.scaled_value,
-            (point[1] - self.scrolled_point[1]) / self.scaled_value
-        ]
+        return self.Convert_Relative_To_Map(self.Relative(point))
 
 
-    def Convert_Map_To_Relative(self, point:list[int]):
+    def Convert_Map_To_Relative(self, point:game.position):
         return [
             point[0] * self.scaled_value + self.scrolled_point[0],
             point[1] * self.scaled_value + self.scrolled_point[1]
         ]
 
 
-    def Convert_Map_To_Global(self, point:list[int]):
-        return self.Global([
-            point[0] * self.scaled_value + self.scrolled_point[0],
-            point[1] * self.scaled_value + self.scrolled_point[1]
-        ])
+    def Convert_Map_To_Global(self, point:game.position):
+        return self.Global(self.Convert_Map_To_Relative(point))
 

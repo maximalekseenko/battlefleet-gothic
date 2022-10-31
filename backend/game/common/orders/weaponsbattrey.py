@@ -1,41 +1,39 @@
 import math
-from backend.game import Armament, Order
+from backend.game import Armament, Order, position, Vessel
 
 
 
-class WeaponsBattrey(Armament):
-    NAME = "WEAPONSBATTREY"
-    TYPE = "WEAPON"
-    SHOW_BASE = False
-    SHOW_LINE = True
-    SHOW_VALUE = True
-    SHOW_TARGET = True
-    SHOW_ARC = True
-
-    # def On_Give
-    # Is_Visible
-    # Is_Enabled
-    # Is_Warn
-    def Get_Default_Data(self): return {
-        'position':self.vessel.position,
-        'value':None,
-        'show_value':''}
+class WeaponsBattrey(Order):
+    KEYWORD = 'weaponsbattrey'
+    NAME = "Weapons Battrey"
 
 
-    def Get_Data(self, target: tuple[int, int] | list[int] | None = None) -> dict[str, any]:
-        if target==None: return self.Get_Default_Data()
+    def Do(self, target:position):
+        target_vessel = self.game.Get_Vessel_In_Position(target, is_enemy=True)
+        if not target_vessel: return
 
-        target_vessel = self.game.Get_Vessel_In_Position(target, False, False, False, True)
-        if target_vessel == None: return self.Get_Default_Data()
+        if not self._Is_Valid_Target(target_vessel): return
 
-        if math.hypot(self.vessel.position[0] - target[0], self.vessel.position[1] - target[1]) > self.RANGE: return {
-            'position':self.vessel.position,
-            'value':"OUT OF RANGE",
-            'show_value':''}
+        target_vessel.hits =- 1
 
-        return {
-            'position':target_vessel.position,
-            'value':target_vessel,
-            'show_value':target_vessel.TYPE}
-    # On_Do
-    # Get_Display_Text
+
+    def Preview(self, target:position|None):
+        self.game.visualizer.Arc("#a000b0", 0, 90)
+
+        # with target
+        if target != None:
+
+            # get target vessel
+            target_vessel = self.game.Get_Vessel_In_Position(target, is_enemy=True)
+            if not target_vessel: return
+
+            # check target
+            if not self._Is_Valid_Target(target_vessel): return
+
+            # render
+            self.game.visualizer.Line("#a000b0", self.vessel.position, target_vessel.position)
+
+
+    def _Is_Valid_Target(self, target_vessel:Vessel):
+        if math.hypot(*(self.vessel.position - target_vessel.position)) > 50: return False
+        return True

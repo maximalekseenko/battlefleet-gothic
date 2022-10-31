@@ -1,65 +1,52 @@
-from math import atan2, cos, degrees, hypot, sin
-
-from backend.game import Order, vessel, position
-
+import math
+import backend.game as game
 
 
-class Move(Order):
-    KEYWORD = 'movement'
+
+class Move(game.Order):
+    KEYWORD = 'move'
     NAME = 'Move Vessel'
     PHASE = 'Movement'
-    TARGET = position
 
 
-    def On_Do(self, target:tuple[int, int]=None) -> None:
-        data = self.Get_Data(target)
-        target_position = data['position']
-        target_distande = data['value']
-
-        # check if target valid
-        if target_position == None: return
-
-        # check if turn speed left
-        if self.vessel.turn_speed <= 0: return
+    def Do(self, target:game.position) -> None:
+        position, distande = self._Get_Position_And_Distance(target)
 
         # check if same
-        if target_position == self.vessel.position: return
+        if position == self.vessel.position: return
 
         # remove turn distance
-        self.vessel.turn_speed -= target_distande
+        self.vessel.turn_speed -= distande
 
-        self.vessel.position = target_position
-
-
-    def Get_Default_Data(self):
-        return {
-            'position':self.vessel.position,
-            'value':None,
-            'show_value':'',
-        }
+        # move vessel
+        self.vessel.position = position
 
 
-    def Get_Data(self, target: tuple[int, int] | list[int] | None = None) -> dict[str, any]:
-        if target == None: return self.Get_Default_Data()
+    def Preview(self, target: game.position | None) -> None:
+        final_position, distace = self._Get_Position_And_Distance(target)
+        
+        self.game.visualizer.Line("#a000b0", self.vessel.position, final_position)
+        self.game.visualizer.Highlight("#a000b0", self.vessel, final_position)
+        self.game.visualizer.Arcs("#a000b0", final_position, 60)
 
-        delta_X = self.vessel.position[0] - target[0]
-        delta_Y = self.vessel.position[1] - target[1]
+
+    def _Get_Position_And_Distance(self, target: game.position) -> tuple[game.position, int]:
+        delta = self.vessel.position - target
 
         # get target distance
-        sinner =   + sin(self.vessel.rad_rotation)
-        cosinner = - cos(self.vessel.rad_rotation)
-        target_distance = cosinner * delta_X + sinner * delta_Y
+        sinner =   + math.sin(self.vessel.rad_rotation)
+        cosinner = - math.cos(self.vessel.rad_rotation)
+        target_distance = cosinner * delta[0] + sinner * delta[1]
 
-        # position for loop
-        ## current position
-        curr_position = self.vessel.position
+        # variables for loop
+        curr_position = self.vessel.position.copy()
         curr_distance = 0
-        ## second valid position
-        last_valid_position = self.vessel.position
-        last_valid_distance = 0
         ## first valid positon
-        curr_valid_position = self.vessel.position
-        curr_valid_distance = 0
+        first_valid_position = self.vessel.position.copy()
+        first_valid_distance = 0
+        ## second valid position
+        second_valid_position = self.vessel.position.copy()
+        second_valid_distance = 0
         ## movement pool
         movement_left = self.vessel.turn_speed
 
@@ -69,9 +56,8 @@ class Move(Order):
         while movement_left - STEP_ACC >= 0:
 
             # get new current positon
-            curr_position = (
-                curr_position[0] + cos(self.vessel.rad_rotation) * STEP_ACC,
-                curr_position[1] - sin(self.vessel.rad_rotation) * STEP_ACC)
+            curr_position.x += math.cos(self.vessel.rad_rotation) * STEP_ACC
+            curr_position.y -= math.sin(self.vessel.rad_rotation) * STEP_ACC
             curr_distance += STEP_ACC
 
             # reduce movement pool
@@ -81,37 +67,33 @@ class Move(Order):
             # hash if current positon is valid
             if self._Is_Valid_Positon(curr_position):
                 ## second valid = first
-                last_valid_position = curr_valid_position
-                last_valid_distance = curr_valid_distance
+                second_valid_position = first_valid_position
+                second_valid_distance = first_valid_distance
                 ## first valid = current
-                curr_valid_position = curr_position
-                curr_valid_distance = curr_distance
+                first_valid_position = curr_position.copy()
+                first_valid_distance = curr_distance
 
             # if target reached
             if curr_distance >= target_distance:
                 ## continue until we find valid
-                if curr_valid_position == curr_position: break
+                if first_valid_position == curr_position: break
 
         # find valid position, closest to target position
         ## first valid is closer
-        if abs(last_valid_distance - target_distance) > abs(curr_valid_distance - target_distance):
-            return_distance = curr_valid_distance
-            return_position = curr_valid_position
+        if abs(second_valid_distance - target_distance) > abs(first_valid_distance - target_distance):
+            return_distance = first_valid_distance
+            return_position = first_valid_position
         ## second valid is closer
         else:
-            return_distance = last_valid_distance
-            return_position = last_valid_position
+            return_distance = second_valid_distance
+            return_position = second_valid_position
 
-        # empty pool if pool is sell then accurancy
+        # empty pool if pool is less then accurancy
         if return_distance + STEP_ACC >= self.vessel.turn_speed:
             return_distance = self.vessel.turn_speed
 
         # return
-        data = self.Get_Default_Data()
-        data['position'] = return_position
-        data['value'] = return_distance
-        data['show_value'] = round(return_distance, 5)
-        return data
+        return return_position, return_distance
 
 
     def _Is_Valid_Positon(self, position:tuple[int, int]|list[int]) -> bool:
@@ -130,5 +112,8 @@ class Move(Order):
         return 0
 
 
-    def Is_Disabled(self) -> bool:
+    @property
+    def is_disabled(self):
         return self.vessel.turn_speed <= 0
+
+

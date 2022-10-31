@@ -1,6 +1,5 @@
 import pygame
 
-
 # theatre
 from frontend.theatre import theatre
 

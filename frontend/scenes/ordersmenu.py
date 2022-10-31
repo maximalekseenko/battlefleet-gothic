@@ -79,7 +79,7 @@ class OrdersMenu(Scene):
         else: self._selected_order = value
 
 
-    def Position_Action(self, position):
+    def Do(self, position):
         self.selected_order.Do(position)
         self.selected_order = None
 

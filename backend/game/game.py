@@ -30,6 +30,11 @@ class Game:
 
         self.player:Player = None
 
+        # vizualizer
+        if 'visualizer' in preferences:
+            from .game_addons.visualizer import Vizualizer
+            self.visualizer = Vizualizer(self, preferences['visualizer'])
+
 
     def Add_Vessel(self, vessel_type, owner:Player|int, position:tuple[int, int], rotation:int) -> game.Vessel:
 

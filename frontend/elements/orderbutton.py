@@ -51,8 +51,8 @@ class OrderButton(Element):
             if event.button == 1:
 
                 # can be clicked
-                if self.order.Is_Disabled(): return
-                if self.order.Is_Invisible(): return
+                if self.order.is_invisible: return
+                if self.order.is_disabled: return
                 if not self.rect.collidepoint(self.scene.Relative(event.pos)): return
 
                 # resolve click
@@ -63,7 +63,7 @@ class OrderButton(Element):
     def On_Render(self, target:pygame.Surface):
 
         # can be rendered
-        if self.order.is_visible: return
+        if self.order.is_invisible: return
 
         # render background
         self._Render_Background(target)

@@ -1,9 +1,7 @@
+from __future__ import annotations
 import math
 
-from .order import Order
-from .armament import Armament
-from .player import Player
-from .enums import VESSELTYPE
+import backend.game as game
 
 
 class Vessel:
@@ -24,7 +22,7 @@ class Vessel:
     MOVEMENT_CHECKS:list = list()
 
     # datasheet
-    TYPE:VESSELTYPE
+    TYPE:game.VESSELTYPE
     HITS:int
     '''starting hits'''
     SPEED:int
@@ -33,24 +31,25 @@ class Vessel:
     '''starting turns'''
 
     # lists
-    ORDERS:list[type[Order]]
-    ARMAMENTS:list[type[Armament]]
+    ORDERS:list[type[game.Order]]
+    ARMAMENTS:list[type[game.Armament]]
 
     BASE_RADIUS:int
 
 
-    def __init__(self, game, owner:Player, position:tuple[int,int], rotation:int, id:int) -> None:
-        
-        from .game import Game
-        self.game:Game = game
+    def __init__(self, __game, owner:game.Player, position:game.position, rotation:int, id:int) -> None:
+        self.game:game.Game = __game
+
+        # position
+        if type(position) != game.position: position = game.position(*position)
+        self.position:game.position = position
 
         # properties
         self._rotation:int = 0
 
         # game variables
-        self.owner:Player = owner
+        self.owner:game.Player = owner
         self.id:int = id
-        self.position:tuple[int,int] = position
         self.rotation = rotation
 
         # datasheet
@@ -59,7 +58,7 @@ class Vessel:
         self.turns = self.TURNS
 
         # lists
-        self.orders:list[Order] = list()
+        self.orders:list[game.Order] = list()
 
         order_id = 0
         for order in self.ORDERS:
@@ -87,11 +86,11 @@ class Vessel:
         return math.radians(self.rotation)
 
 
-    def Is_Collision(self, point:tuple[int,int]|list[int]):
-        return math.hypot(self.position[0]-point[0],self.position[1]-point[1]) <= self.BASE_RADIUS
+    def Is_Collision(self, point:game.position) -> bool:
+        return math.hypot(self.position[0] - point[0], self.position[1] - point[1]) <= self.BASE_RADIUS
 
 
-    def Get_Order_By_Id(self, id) -> Order:
+    def Get_Order_By_Id(self, id) -> game.Order:
         for order in self.orders:
             if order.id == id: return order
 

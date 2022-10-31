@@ -4,8 +4,9 @@ from backend.game import Order
 from backend.game.enums.vesseltype import VESSELTYPE
 
 class Rotate(Order):
+    KEYWORD = 'rotate'
     NAME = "Rotate"
-    TYPE = "MOVEMENT"
+    PHASE = ''
 
     SHOW_BASE = False
     SHOW_LINE = True

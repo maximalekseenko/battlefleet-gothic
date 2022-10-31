@@ -1,10 +1,3 @@
-import backend.game._new
-
-
-print(1,2, 2 | 2)
-
-quit()
-
 from backend.game import Game
 from test2 import LunarClassCruiser
 

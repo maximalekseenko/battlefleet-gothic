@@ -13,10 +13,6 @@ class GameAct(Act):
         # surface
         self.surface = pygame.display.get_surface()
 
-        # game
-        from backend.game import Game
-        self.game:Game = Game()
-
         # scenes
         from frontend.scenes import ConnectionMenu, OrdersMenu, MapMenu, VesselInfoMenu
         self.connectionmenu:ConnectionMenu = ConnectionMenu(self, self.surface)
@@ -24,6 +20,12 @@ class GameAct(Act):
         self.mapmenu:MapMenu = MapMenu(self)
         self.vesselinfomenu:VesselInfoMenu = VesselInfoMenu(self)
 
+        # game
+        from backend.game import Game
+        self.game:Game = Game(
+            players_amount = 2,
+            visualizer=self.mapmenu
+        )
 
         # TODO: DELETE
         from test2 import LunarClassCruiser
