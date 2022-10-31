@@ -1,2 +1,2 @@
 from .mainact import MainAct
-from .gameact import GameAct
+from ..game.gameact import GameAct

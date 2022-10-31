@@ -1,13 +1,17 @@
-from __future__ import annotations
 import pygame
+
 import backend.game as game
+from .mapmenu import MapMenu
 
 
 class Vizualizer:
     
-    def __init__(self, game:game.Game, scene) -> None:
-        self.game:game.Game = game
-        self.scene = scene
+    def __init__(self, scene:MapMenu) -> None:
+        self.scene:MapMenu = scene
+
+        self.back = list()
+        self.front = list()
+        self.globa = list()
 
 
     def Highlight(self, color:pygame.Color, vessel:game.Vessel, pos:game.position=None):

@@ -3,10 +3,16 @@ import pygame
 # engine
 from engine import Scene, Element
 from frontend.theatre import theatre
+
+# game
 from backend.game import Vessel, Order
-from backend.game.common.orders.novessel import NoVessel
-from backend.game.common.orders.noorder import NoOrder
-from frontend.elements import OrderButton
+
+# logic
+from .novessel import NoVessel
+from .noorder import NoOrder
+
+# visual
+from .orderbutton import OrderButton
 
 
 
@@ -19,7 +25,6 @@ class OrdersMenu(Scene):
         self.act:GameAct
 
         # elements
-        self.noselection:pygame.Surface
         self.elements:list[Element] = list()
 
         # variables
@@ -89,23 +94,15 @@ class OrdersMenu(Scene):
         self._selected_vessel_none = NoVessel(self.act.game, self.act.game.player, (0,0), 0, -1)
         self._selected_order_none = NoOrder(self)
 
-        if self.selected_vessel == None:
-            # no selection
-            text_a = theatre.FONT24.render("NO VESSEL", 1, theatre.settings['enemy_color'])
-            text_b = theatre.FONT24.render("SELECTED", 1, theatre.settings['enemy_color'])
-            self.noselection = pygame.Surface((self.rect.width, text_a.get_height() + text_b.get_height()), pygame.SRCALPHA)
-            self.noselection.blit(text_a, text_a.get_rect(centerx=self.noselection.get_rect().centerx, y=0))
-            self.noselection.blit(text_b, text_b.get_rect(centerx=self.noselection.get_rect().centerx, y=text_a.get_height()))
-        else:
-            content_top = self.scrolled_value
-            self.content_height = 0
+        content_top = self.scrolled_value
+        self.content_height = 0
 
-            DISTANCE = 3
+        DISTANCE = 3
 
-            for orderbutton in self.elements:
-                orderbutton.Update()
-                orderbutton.rect.top = self.content_height + content_top
-                self.content_height += orderbutton.rect.height + DISTANCE
+        for orderbutton in self.elements:
+            orderbutton.Update()
+            orderbutton.rect.top = self.content_height + content_top
+            self.content_height += orderbutton.rect.height + DISTANCE
             
         
 
@@ -143,12 +140,7 @@ class OrdersMenu(Scene):
             (self.rect.width, max(self.content_height, self.rect.height))), 2)
 
         # render elements
-        ## vessel not selected
-        if self.selected_vessel == None: 
-            self.act.surface.blit(self.noselection, self.noselection.get_rect(center=self.rect.center))
-        ## vessel selected
-        else: 
-            for element in self.elements: element.Render(self.surface)
+        for element in self.elements: element.Render(self.surface)
 
         # render on screen
         self.act.surface.blit(self.surface, self.rect)

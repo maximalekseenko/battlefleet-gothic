@@ -14,9 +14,11 @@ class GameAct(Act):
         self.surface = pygame.display.get_surface()
 
         # scenes
-        from frontend.scenes import ConnectionMenu, OrdersMenu, MapMenu, VesselInfoMenu
+        from frontend.scenes import ConnectionMenu, VesselInfoMenu
         self.connectionmenu:ConnectionMenu = ConnectionMenu(self, self.surface)
+        from .order.ordersmenu import OrdersMenu
         self.ordersmenu:OrdersMenu = OrdersMenu(self)
+        from .map.mapmenu import MapMenu
         self.mapmenu:MapMenu = MapMenu(self)
         self.vesselinfomenu:VesselInfoMenu = VesselInfoMenu(self)
 
@@ -24,7 +26,7 @@ class GameAct(Act):
         from backend.game import Game
         self.game:Game = Game(
             players_amount = 2,
-            visualizer=self.mapmenu
+            visualizer=self.mapmenu.vizualizer
         )
 
         # TODO: DELETE

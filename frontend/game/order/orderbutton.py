@@ -12,7 +12,7 @@ class OrderButton(Element):
         super().__init__(scene, surface_flags=pygame.SRCALPHA)
 
         # for snippets
-        from frontend.scenes import OrdersMenu
+        from .ordersmenu import OrdersMenu
         self.scene:OrdersMenu
 
         # variables

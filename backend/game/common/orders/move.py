@@ -27,7 +27,7 @@ class Move(game.Order):
         
         self.game.visualizer.Line("#a000b0", self.vessel.position, final_position)
         self.game.visualizer.Highlight("#a000b0", self.vessel, final_position)
-        self.game.visualizer.Arcs("#a000b0", final_position, 60)
+        # self.game.visualizer.Arcs("#a000b0", final_position, 60)
 
 
     def _Get_Position_And_Distance(self, target: game.position) -> tuple[game.position, int]:
@@ -101,7 +101,7 @@ class Move(game.Order):
         # vessels
         for vessel in self.game.forces:
             if vessel == self.vessel: continue
-            if hypot(position[0] - vessel.position[0], position[1] - vessel.position[1]) < vessel.BASE_RADIUS + self.vessel.BASE_RADIUS:
+            if math.hypot(position[0] - vessel.position[0], position[1] - vessel.position[1]) < vessel.BASE_RADIUS + self.vessel.BASE_RADIUS:
                 return False
 
         # no obstacles

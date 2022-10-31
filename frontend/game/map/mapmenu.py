@@ -15,6 +15,10 @@ class MapMenu(Scene):
         from frontend.acts import GameAct
         self.act:GameAct
 
+
+        from .visualizer import Vizualizer
+        self.vizualizer = Vizualizer(self)
+
         self.scrolled_point:list[int] = [0, 0]
         self.scaled_value:int = 2
 
@@ -94,28 +98,13 @@ class MapMenu(Scene):
         self.surface.fill(theatre.settings['background_color'])
         pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 1)
 
-
-        # get orders data
-        order_data = self.act.ordersmenu.selected_order.Get_Position_Data(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
-        order_data['position'] = self.Convert_Map_To_Relative(order_data['position'])
-
         # rendering
         ## game background
         self._Render_Game_Background()
-        # ## order line
-        # if order_data['line']: self._Render_Order_Line(order_data)
-        ## vessel highlights
         self._Render_Vessel_Highlights()
         # ## order base
-        # if order_data['base']: self._Render_Order_Base(order_data)
-        ## vessel visuals
         self._Render_Vessel_Visuals()
         # ## order arc
-        # if order_data['arc']:pass
-        # ## order target
-        # if order_data['target']: self._Render_Order_Target(order_data)
-        # ## order value
-        # if order_data['value']: self._Render_Order_Value(order_data)
 
 
         # TODO:DELETE
