@@ -16,8 +16,8 @@ class MapMenu(Scene):
         self.act:GameAct
 
 
-        from .visualizer import Vizualizer
-        self.vizualizer = Vizualizer(self)
+        from .visualizer import Visualizer
+        self.visualizer = Visualizer(self)
 
         self.scrolled_point:list[int] = [0, 0]
         self.scaled_value:int = 2
@@ -99,12 +99,12 @@ class MapMenu(Scene):
         pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 1)
 
         # rendering
-        ## game background
+        self.visualizer.visualize(0)
         self._Render_Game_Background()
         self._Render_Vessel_Highlights()
-        # ## order base
+        self.visualizer.visualize(1)
         self._Render_Vessel_Visuals()
-        # ## order arc
+        self.visualizer.visualize(2)
 
 
         # TODO:DELETE

@@ -1,36 +1,73 @@
 import pygame
-
+import math
 import backend.game as game
 from .mapmenu import MapMenu
 
 
-class Vizualizer:
+class Visualizer:
     
     def __init__(self, scene:MapMenu) -> None:
         self.scene:MapMenu = scene
 
-        self.back = list()
-        self.front = list()
-        self.globa = list()
+        self.layers:list[list] = [list(), list(), list()]
+
+        self.requests:dict[str, tuple[function, list]] = {
+            'Highlight': [self.Highlight, self.layers[1]],
+            'Line': [self.Line, self.layers[1]],
+            'Arcs': [self.Arcs, self.layers[1]],
+        }
+
+    
+    def __call__(self, function:str, 
+            **kargs) -> None:
+        kargs['function'] = function
+
+        self.requests[function][1].append(kargs)
 
 
-    def Highlight(self, color:pygame.Color, vessel:game.Vessel, pos:game.position=None):
-        if pos == None: pos = vessel.position
-        pos = self.scene.Convert_Map_To_Relative(pos)
-
-        pygame.draw.circle(self.scene.surface, color, pos, vessel.BASE_RADIUS * self.scene.scaled_value, 1)
-
-
-    def Line(self, color:pygame.Color, start_pos:game.position, end_pos:game.position):
-        start_pos = self.scene.Convert_Map_To_Relative(start_pos)
-        end_pos = self.scene.Convert_Map_To_Relative(end_pos)
-
-        pygame.draw.line(self.scene.surface, color, start_pos, end_pos)
+    def visualize(self, layer:int):
+        while self.layers[layer]:
+            item = self.layers[layer].pop()
+            self.requests[item['function']][0](**item)
 
 
-    def Arc(self, color:pygame.Color, start_rot:int, end_rot:int):
-        ...
+    def Highlight(self, color:pygame.Color, vessel:game.Vessel, position:game.position=None, **kargs):
+        if position == None: position = vessel.position
+        position = self.scene.Convert_Map_To_Relative(position)
+
+        pygame.draw.circle(self.scene.surface, color, position, vessel.BASE_RADIUS * self.scene.scaled_value, 1)
 
 
-    # def Arcs(self, color:pygame.Color, start_rot:int, end_rot:int)
+    def Line(self, color:pygame.Color, position:game.position, position2:game.position, **kargs):
+        position = self.scene.Convert_Map_To_Relative(position)
+        position2 = self.scene.Convert_Map_To_Relative(position2)
+
+        pygame.draw.line(self.scene.surface, color, position, position2)
+
+
+    def Arcs(self, color:pygame.Color, vessel:game.Vessel, position:game.position=None, **kargs):
+        if position == None: position = vessel.position
+        position = self.scene.Convert_Map_To_Relative(position)
+        
+        # hands
+        pygame.draw.line(self.scene.surface, color, 
+            [   position[0] + vessel.BASE_RADIUS * self.scene.scaled_value * math.cos(vessel.rad_rotation + math.pi*0.25),
+                position[1] - vessel.BASE_RADIUS * self.scene.scaled_value * math.sin(vessel.rad_rotation + math.pi*0.25)],
+            [   position[0] + 60 * self.scene.scaled_value * math.cos(vessel.rad_rotation + math.pi*0.25), 
+                position[1] - 60 * self.scene.scaled_value * math.sin(vessel.rad_rotation + math.pi*0.25)])
+        pygame.draw.line(self.scene.surface, color, 
+            [   position[0] + vessel.BASE_RADIUS * self.scene.scaled_value * math.cos(vessel.rad_rotation - math.pi*0.25),
+                position[1] - vessel.BASE_RADIUS * self.scene.scaled_value * math.sin(vessel.rad_rotation - math.pi*0.25)],
+            [   position[0] + 60 * self.scene.scaled_value * math.cos(vessel.rad_rotation - math.pi*0.25), 
+                position[1] - 60 * self.scene.scaled_value * math.sin(vessel.rad_rotation - math.pi*0.25)])
+        pygame.draw.line(self.scene.surface, color, 
+            [   position[0] + vessel.BASE_RADIUS * self.scene.scaled_value * math.cos(vessel.rad_rotation + math.pi*1.25),
+                position[1] - vessel.BASE_RADIUS * self.scene.scaled_value * math.sin(vessel.rad_rotation + math.pi*1.25)],
+            [   position[0] + 60 * self.scene.scaled_value * math.cos(vessel.rad_rotation + math.pi*1.25), 
+                position[1] - 60 * self.scene.scaled_value * math.sin(vessel.rad_rotation + math.pi*1.25)])
+        pygame.draw.line(self.scene.surface, color, 
+            [   position[0] + vessel.BASE_RADIUS * self.scene.scaled_value * math.cos(vessel.rad_rotation - math.pi*1.25),
+                position[1] - vessel.BASE_RADIUS * self.scene.scaled_value * math.sin(vessel.rad_rotation - math.pi*1.25)],
+            [   position[0] + 60 * self.scene.scaled_value * math.cos(vessel.rad_rotation - math.pi*1.25), 
+                position[1] - 60 * self.scene.scaled_value * math.sin(vessel.rad_rotation - math.pi*1.25)])
     

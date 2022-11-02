@@ -14,7 +14,6 @@ class NoOrder(game.Order):
         self.game:game.Game = self.scene.act.game
 
 
-
     def Do(self, position:game.position) -> None:
         self.scene.selected_vessel = self.game.Get_Vessel_In_Position(position, False, False, False, True)
         self.scene.Update()

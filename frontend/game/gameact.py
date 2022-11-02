@@ -26,7 +26,7 @@ class GameAct(Act):
         from backend.game import Game
         self.game:Game = Game(
             players_amount = 2,
-            visualizer=self.mapmenu.vizualizer
+            visualizer=self.mapmenu.visualizer
         )
 
         # TODO: DELETE

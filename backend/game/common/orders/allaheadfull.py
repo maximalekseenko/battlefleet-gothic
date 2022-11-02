@@ -1,17 +1,15 @@
 from backend.game import Order
+import backend.game as game
 
 
 class AllAheadFull(Order):
-    NAME = "ALLAHEADFULL"
-    TYPE = "SPECAL"
-    DISPLAY_NAME = "ALL AHEAD FULL"
-    TOOLTIP = "Move more."
+    KEYWORD = "allaheadfull"
+    NAME = "All Ahead Full"
 
 
-    def Step(self, **kargs): 
-        self.vessel.orders["MOVE"].use_maximum += 100
-        self.vessel.orders["MOVE"].use_minimum = self.vessel.orders["MOVE"].use_maximum
+    def Preview(self, target: game.position | None) -> None:
+        pass
 
 
-    def On_Selected(self) -> None:
-        self.Do()
+    def Do(self, position: game.position | None) -> None:
+        self.vessel.turn_speed += 100

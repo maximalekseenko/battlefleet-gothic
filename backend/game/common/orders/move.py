@@ -25,9 +25,9 @@ class Move(game.Order):
     def Preview(self, target: game.position | None) -> None:
         final_position, distace = self._Get_Position_And_Distance(target)
         
-        self.game.visualizer.Line("#a000b0", self.vessel.position, final_position)
-        self.game.visualizer.Highlight("#a000b0", self.vessel, final_position)
-        # self.game.visualizer.Arcs("#a000b0", final_position, 60)
+        self.game.visualizer('Line', color="#a000b0", position=self.vessel.position, position2=final_position)
+        self.game.visualizer('Highlight', color="#a000b0", vessel=self.vessel, position=final_position)
+        self.game.visualizer('Arcs', color="#a0a0a0", vessel=self.vessel, position=final_position)
 
 
     def _Get_Position_And_Distance(self, target: game.position) -> tuple[game.position, int]:
