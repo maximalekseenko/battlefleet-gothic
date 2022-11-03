@@ -5,6 +5,7 @@ from backend.game import Armament, Order, position, Vessel
 
 class WeaponsBattrey(Order):
     KEYWORD = 'weaponsbattrey'
+    TAGS = ['armament']
     NAME = "Weapons Battrey"
 
 
@@ -14,11 +15,11 @@ class WeaponsBattrey(Order):
 
         if not self._Is_Valid_Target(target_vessel): return
 
-        target_vessel.hits =- 1
+        target_vessel.hits -= 1
 
 
     def Preview(self, target:position|None):
-        self.game.visualizer.Arc("#a000b0", 0, 90)
+        self.game.visualizer('Arcs', color='#a00000', vessel=self.vessel)
 
         # with target
         if target != None:
@@ -31,7 +32,7 @@ class WeaponsBattrey(Order):
             if not self._Is_Valid_Target(target_vessel): return
 
             # render
-            self.game.visualizer.Line("#a000b0", self.vessel.position, target_vessel.position)
+            self.game.visualizer('Line', color="#a000b0", position=self.vessel.position, position2=target_vessel.position)
 
 
     def _Is_Valid_Target(self, target_vessel:Vessel):
