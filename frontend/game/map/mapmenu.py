@@ -98,6 +98,9 @@ class MapMenu(Scene):
         self.surface.fill(theatre.settings['background_color'])
         pygame.draw.rect(self.surface, theatre.settings['neutral_color'], ((0,0), self.rect.size), 1)
 
+        # preview
+        self.act.ordersmenu.selected_order.Preview(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
+        
         # rendering
         self.visualizer.visualize(0)
         self._Render_Game_Background()
@@ -105,11 +108,6 @@ class MapMenu(Scene):
         self.visualizer.visualize(1)
         self._Render_Vessel_Visuals()
         self.visualizer.visualize(2)
-
-
-        # TODO:DELETE
-        self.act.ordersmenu.selected_order.Preview(self.Convert_Global_To_Map(pygame.mouse.get_pos()))
-        
 
         # finish
         self.act.surface.blit(self.surface, self.rect)
